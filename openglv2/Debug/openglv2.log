@@ -1,4 +1,3 @@
 ﻿  main.cpp
-cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)

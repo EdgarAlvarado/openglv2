@@ -23,6 +23,8 @@ GLboolean swap = false;
 GLboolean delay = false;
 GLfloat blendFactor = 0.2f;
 
+glm::vec3 rotateV(0.5f, 1.0f, 0.0f);
+
 int main()
 {
 	// glfw: initialize and configure
@@ -104,22 +106,56 @@ int main()
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
-	unsigned int indices[] = {  // note that we start from 0!
-		0, 1, 3,  // first Triangle
-		1, 2, 3   // second Triangle
-	};
-	GLuint twoTriangles[] =
+	GLfloat verticesI[] = 
 	{
-		4, 5, 7,
-		5, 6, 8
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, //0
+		0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, //4
+		0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //8
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //11
+		0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		0.5f, -0.5f, -0.5f,  1.0f, 1.0f, //14
+
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f //15
+	};
+	unsigned int indices[] = {
+		0, 1, 2,
+		2, 3, 0,
+
+		4, 5, 6,
+		6, 7, 4,
+
+		8, 9, 10,
+		10, 4, 8,
+
+		11, 2, 12,
+		12, 13, 11,
+
+		10, 14, 5,
+		5, 4, 10,
+
+		3, 2, 11,
+		11, 15, 3
 	};
 
-	unsigned int VBO, VAO, EBO;
+	GLuint VBO, VAO, EBO;
 	GLuint VBO2, VAO2, EBO2;
 	glGenVertexArrays(1, &VAO);
-	glGenVertexArrays(1, &VAO2);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
+	glGenVertexArrays(1, &VAO2);
 	glGenBuffers(1, &VBO2);
 	glGenBuffers(1, &EBO2);
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
@@ -147,19 +183,22 @@ int main()
 	// VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
 	glBindVertexArray(0);
 
+
 	glBindVertexArray(VAO2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesI), verticesI, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO2);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(twoTriangles), twoTriangles, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3* sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
 
@@ -229,7 +268,7 @@ int main()
 
 		glm::mat4 model;
 		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), rotateV);
 
 		glm::mat4 view;
 		// nore that we're translating the scene in the reverse direction of where we want to mode
@@ -251,10 +290,18 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, texture2);
-		glBindVertexArray(swap ? VAO : VAO2); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-								//glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		if (!swap)
+		{
+			glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+									//glDrawArrays(GL_TRIANGLES, 0, 6);
+									//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
+		else
+		{
+			glBindVertexArray(VAO2);
+			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		}
 
 		// glBindVertexArray(0); // no need to unbind it every time 
 
@@ -285,6 +332,7 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !delay)
 	{
 		swap = !swap;
+		rotateV *= -1;
 		delay = true;
 	}
 	else if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
