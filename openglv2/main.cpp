@@ -15,6 +15,7 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 bool keyPressed(GLFWwindow *window, int key);
+void mouse_callback(GLFWwindow *window, GLdouble xpos, GLdouble ypos);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -22,6 +23,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 GLboolean swap = false;
 GLboolean delay = false;
+GLboolean firstMouse = true;
 GLfloat blendFactor = 0.2f;
 
 glm::vec3 rotateV(0.5f, 1.0f, 0.0f);
@@ -29,6 +31,12 @@ glm::vec3 rotateV(0.5f, 1.0f, 0.0f);
 glm::vec3 cameraPos		= glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront	= glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp		= glm::vec3(0.0f, 1.0f, 0.0f);
+
+GLfloat deltaTime = 0.0f;
+GLfloat lastFrame = 0.0f;
+
+GLfloat lastX = SCR_WIDTH / 2.f, lastY = SCR_HEIGHT / 2.0f;
+GLfloat yaw = -90.0f, pitch = 0.0f;
 
 int main()
 {
@@ -54,6 +62,8 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -273,6 +283,10 @@ int main()
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
+		GLfloat currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		// input
 		// -----
 		processInput(window);
@@ -286,10 +300,7 @@ int main()
 		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		GLfloat radius = 10.0f;
-		GLfloat camX = sin(glfwGetTime()) * radius;
-		GLfloat camZ = cos(glfwGetTime()) * radius;
-		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH / SCR_HEIGHT), 0.1f, 100.0f);
@@ -384,7 +395,7 @@ void processInput(GLFWwindow *window)
 		if (blendFactor < 0.0f) blendFactor = 0.0f;
 	}
 
-	GLfloat cameraSpeed = 0.05f;
+	GLfloat cameraSpeed = 2.5f * deltaTime;
 	if (keyPressed(window, GLFW_KEY_W))
 		cameraPos += cameraSpeed * cameraFront;
 	if (keyPressed(window, GLFW_KEY_S))
@@ -407,5 +418,38 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
+}
+
+void mouse_callback(GLFWwindow *window, GLdouble xpos, GLdouble ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	GLfloat xoffset = xpos - lastX;
+	GLfloat yoffset = lastY - ypos; // Reversed since y-coordinates range from bottom to top
+	lastX = xpos;
+	lastY = ypos;
+
+	GLfloat sensitivity = 0.05f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+	front.y = sin(glm::radians(pitch));
+	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	cameraFront = glm::normalize(front);
 }
 
