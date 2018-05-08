@@ -130,7 +130,7 @@ int main()
 
 		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f //15
 	};
-	unsigned int indices[] = {
+	GLuint indices[] = {
 		0, 1, 2,
 		2, 3, 0,
 
@@ -148,6 +148,18 @@ int main()
 
 		3, 2, 11,
 		11, 15, 3
+	};
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
 
 	GLuint VBO, VAO, EBO;
@@ -266,26 +278,26 @@ int main()
 		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		glm::mat4 model;
+		/*glm::mat4 model;
 		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), rotateV);
+		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), rotateV);*/
 
 		glm::mat4 view;
 		// nore that we're translating the scene in the reverse direction of where we want to mode
 		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(45.0f), (float)(SCR_WIDTH / SCR_HEIGHT), 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH / SCR_HEIGHT), 0.1f, 100.0f);
 
 		// draw our first triangle
 		ourShader.use();
 		ourShader.setFloat("hOffset", 0.25f);
 		ourShader.setInt("ourTexture2", 1);
 		ourShader.setFloat("blendFactor", blendFactor);
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "transform"), 1, GL_FALSE, glm::value_ptr(trans));
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		ourShader.setMat4("transform", trans);
+		ourShader.setMat4("view", view);
+		ourShader.setMat4("projection", projection);
+		//glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glActiveTexture(GL_TEXTURE1);
@@ -295,12 +307,29 @@ int main()
 			glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 									//glDrawArrays(GL_TRIANGLES, 0, 6);
 									//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
+			for (GLuint i = 0; i < 10; i++)
+			{
+				glm::mat4 model;
+				model = glm::translate(model, cubePositions[i]);
+				GLfloat angel = 20.0f * i;
+				GLfloat time = i % 3 == 0 || i == 0 ? glfwGetTime() : 1.0;
+				model = glm::rotate(model, time * glm::radians(angel), glm::vec3(1.0f, 0.3f, 0.5f));
+				ourShader.setMat4("model", model);
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
 		}
 		else
 		{
 			glBindVertexArray(VAO2);
-			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			for (GLuint i = 0; i < 10; i++)
+			{
+				glm::mat4 model;
+				model = glm::translate(model, cubePositions[i]);
+				GLfloat angel = 20.0f * i;
+				model = glm::rotate(model, glm::radians(angel), glm::vec3(1.0f, 0.3f, 0.5f));
+				ourShader.setMat4("model", model);
+				glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+			}
 		}
 
 		// glBindVertexArray(0); // no need to unbind it every time 

@@ -1,3 +1,4 @@
 ﻿  main.cpp
+d:\etc\projects\openglv2\openglv2\main.cpp(315): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)
