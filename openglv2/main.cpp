@@ -14,6 +14,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+bool keyPressed(GLFWwindow *window, int key);
 
 // settings
 const unsigned int SCR_WIDTH = 800;
@@ -24,6 +25,10 @@ GLboolean delay = false;
 GLfloat blendFactor = 0.2f;
 
 glm::vec3 rotateV(0.5f, 1.0f, 0.0f);
+
+glm::vec3 cameraPos		= glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront	= glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp		= glm::vec3(0.0f, 1.0f, 0.0f);
 
 int main()
 {
@@ -258,6 +263,9 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
+	glm::mat4 view;
+	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
 	// uncomment this call to draw in wireframe polygons.
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -278,13 +286,10 @@ int main()
 		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
 		trans = glm::rotate(trans, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
 
-		/*glm::mat4 model;
-		//model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), rotateV);*/
-
-		glm::mat4 view;
-		// nore that we're translating the scene in the reverse direction of where we want to mode
-		view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+		GLfloat radius = 10.0f;
+		GLfloat camX = sin(glfwGetTime()) * radius;
+		GLfloat camZ = cos(glfwGetTime()) * radius;
+		view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(50.0f), (float)(SCR_WIDTH / SCR_HEIGHT), 0.1f, 100.0f);
@@ -378,6 +383,21 @@ void processInput(GLFWwindow *window)
 		blendFactor -= 0.01f;
 		if (blendFactor < 0.0f) blendFactor = 0.0f;
 	}
+
+	GLfloat cameraSpeed = 0.05f;
+	if (keyPressed(window, GLFW_KEY_W))
+		cameraPos += cameraSpeed * cameraFront;
+	if (keyPressed(window, GLFW_KEY_S))
+		cameraPos -= cameraSpeed * cameraFront;
+	if (keyPressed(window, GLFW_KEY_A))
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (keyPressed(window, GLFW_KEY_D))
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+}
+
+bool keyPressed(GLFWwindow *window, int key)
+{
+	return glfwGetKey(window, key) == GLFW_PRESS;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
