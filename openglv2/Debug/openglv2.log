@@ -1,4 +1,3 @@
 ﻿  main.cpp
-d:\etc\projects\openglv2\openglv2\main.cpp(207): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)
