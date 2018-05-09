@@ -81,6 +81,49 @@ int main()
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
+	float verticesNormal[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+	};
 	GLfloat vertices[] = 
 	{
 		-0.5f, -0.5f, -0.5f, //0
@@ -133,20 +176,23 @@ int main()
 	glGenBuffers(1, &EBO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesNormal), verticesNormal, GL_STATIC_DRAW);
 
 	// bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
 	glBindVertexArray(VAO);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	/*glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);*/
 
 	glBindVertexArray(lightVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -193,17 +239,22 @@ int main()
 		lightingShader.setMat4("view", view);
 		lightingShader.setMat4("projection", projection);
 		lightingShader.setMat4("model", model);
+		lightingShader.setVec3("lightPos", lightPos);
+		lightingShader.setVec3("viewPos", camera.Position);
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 		lampShader.use();
 		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2f));
 		lampShader.setMat4("view", view);
 		lampShader.setMat4("projection", projection);
 		lampShader.setMat4("model", model);
 
 		glBindVertexArray(lightVAO);
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 
 		// glBindVertexArray(0); // no need to unbind it every time 
