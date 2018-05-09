@@ -49,6 +49,12 @@
     <None Include="res\shaders\shader.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\light.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\light.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\wall.jpg">
