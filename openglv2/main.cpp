@@ -239,14 +239,14 @@ int main()
 		lightingShader.setMat4("view", view);
 		lightingShader.setMat4("projection", projection);
 		lightingShader.setMat4("model", model);
-		lightingShader.setVec3("lightPos", lightPos);
+		lightingShader.setVec3("lightPos", lightPos * glm::vec3(sin(glfwGetTime()), 1.0f, cos(glfwGetTime())));
 		lightingShader.setVec3("viewPos", camera.Position);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 		lampShader.use();
-		model = glm::translate(model, lightPos);
+		model = glm::translate(model, lightPos * glm::vec3(sin(glfwGetTime()), 1.0f, cos(glfwGetTime())));
 		model = glm::scale(model, glm::vec3(0.2f));
 		lampShader.setMat4("view", view);
 		lampShader.setMat4("projection", projection);
