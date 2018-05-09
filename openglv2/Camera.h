@@ -64,8 +64,8 @@ public:
 	// Returns the view matrix calculated using Euler Angles and the LookAt Matrix
 	glm::mat4 GetViewMatrix()
 	{
-		return glm::lookAt(Position, Position + Front, Up);
-		//return this->lookAt();
+		//return glm::lookAt(Position, Position + Front, Up);
+		return this->lookAt();
 	}
 
 	// Processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -144,9 +144,16 @@ private:
 		glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
 		//LooAt
 		glm::mat4 view;
+		glm::mat4 translation;
+		glm::mat4 rotation;
+		translation[3] = glm::vec4(-cameraPos, 1.0f);
+		rotation[0] = glm::vec4(cameraRight, 0.0f);
+		rotation[1] = glm::vec4(cameraUp, 0.0f);
+		rotation[2] = glm::vec4(cameraDirection, 0.0f);
+		rotation = glm::transpose(rotation);
 		view = glm::mat4(glm::vec4(cameraRight, -cameraPos.x), glm::vec4(cameraUp, -cameraPos.y), glm::vec4(cameraDirection, -cameraPos.z), glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
 		view = glm::transpose(view);
-		return view;
+		return rotation * translation;
 	}
 };
 #endif
