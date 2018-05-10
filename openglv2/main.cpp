@@ -170,6 +170,19 @@ int main()
 		11, 15, 3
 	};
 
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
 	GLuint VBO, VAO, EBO;
 	GLuint lightVAO;
 	glGenVertexArrays(1, &VAO);
@@ -238,20 +251,22 @@ int main()
 		glm::mat4 projection;
 		projection = glm::perspective(glm::radians(camera.Zoom), (float)(SCR_WIDTH) / (float)(SCR_HEIGHT), 0.1f, 100.0f);
 
-		glm::mat4 model;
+		//glm::mat4 model;
+
+		glm::vec3 lightCurrPos = lightPos;// *glm::vec3(sin(glfwGetTime()), 1.0f, cos(glfwGetTime()));
 
 		// draw our first triangle
 		lightingShader.use();
 		lightingShader.setMat4("view", view);
 		lightingShader.setMat4("projection", projection);
-		lightingShader.setMat4("model", model);
+		//lightingShader.setMat4("model", model);
 		lightingShader.setVec3("viewPos", camera.Position);
 		lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		lightingShader.setFloat("material.shininess", 32.0f);
 		lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		lightingShader.setVec3("light.position", lightPos * glm::vec3(sin(glfwGetTime()), 1.0f, cos(glfwGetTime())));
+		lightingShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
 		lightingShader.setInt("material.diffuse", 0);
 		lightingShader.setInt("material.specular", 1);
 		glActiveTexture(GL_TEXTURE0);
@@ -259,15 +274,24 @@ int main()
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, specularMap);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (GLuint i = 0; i < 10; i++)
+		{
+			glm::mat4 model;
+			model = glm::translate(model, cubePositions[i]);
+			GLfloat angel = 20.0f * i;
+			model = glm::rotate(model, glm::radians(angel), glm::vec3(1.0f, 0.3f, 0.5f));
+			lightingShader.setMat4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 		lampShader.use();
-		model = glm::translate(model, lightPos * glm::vec3(sin(glfwGetTime()), 1.0f, cos(glfwGetTime())));
-		model = glm::scale(model, glm::vec3(0.2f));
+		glm::mat4 lightModel;
+		lightModel = glm::translate(lightModel, lightCurrPos);
+		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
 		lampShader.setMat4("view", view);
 		lampShader.setMat4("projection", projection);
-		lampShader.setMat4("model", model);
+		lampShader.setMat4("model", lightModel);
 
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
