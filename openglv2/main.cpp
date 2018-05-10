@@ -204,6 +204,7 @@ int main()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	GLuint diffuseMap = loadTexture("res/images/container2.png");
+	GLuint specularMap = loadTexture("res/images/container2_specular.png");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -251,8 +252,12 @@ int main()
 		lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
 		lightingShader.setVec3("light.position", lightPos * glm::vec3(sin(glfwGetTime()), 1.0f, cos(glfwGetTime())));
+		lightingShader.setInt("material.diffuse", 0);
+		lightingShader.setInt("material.specular", 1);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularMap);
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
