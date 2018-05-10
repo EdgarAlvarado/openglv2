@@ -272,6 +272,15 @@ int main()
 		lightingShader.setFloat("light.quadratic", 0.032f);
 		lightingShader.setInt("material.diffuse", 0);
 		lightingShader.setInt("material.specular", 1);
+		lightingShader.setVec3("flashLight.position", camera.Position);
+		lightingShader.setVec3("flashLight.direction", camera.Front);
+		lightingShader.setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
+		lightingShader.setVec3("flashLight.ambient", 0.2f, 0.2f, 0.2f);
+		lightingShader.setVec3("flashLight.diffuse", 0.5f, 0.5f, 0.5f);
+		lightingShader.setVec3("flashLight.specular", 1.0f, 1.0f, 1.0f);
+		lightingShader.setFloat("flashLight.constant", 1.0f);
+		lightingShader.setFloat("flashLight.linear", 0.09f);
+		lightingShader.setFloat("flashLight.quadratic", 0.032f);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
 		glActiveTexture(GL_TEXTURE1);
