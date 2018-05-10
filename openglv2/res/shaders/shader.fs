@@ -21,6 +21,7 @@ struct SpotLight {
 	vec3 position;
 	vec3 direction;
 	float cutOff;
+	float outerCutOff;
 
 	vec3 ambient;
 	vec3 diffuse;
@@ -46,32 +47,27 @@ vec3 calculateSpotLight()
 	vec3 result;
 	vec3 lightDir = normalize(flashLight.position - FragPos);
 	float theta = dot(lightDir, normalize(-flashLight.direction));
+	float epsilon = flashLight.cutOff - flashLight.outerCutOff;
+	float intensity = clamp((theta - flashLight.outerCutOff) / epsilon, 0.0, 1.0);
 
-	if(theta > flashLight.cutOff)
-	{
-		float distance = length(flashLight.position - FragPos);
-		float attenuation = 1.0 / (flashLight.constant + flashLight.linear * distance + flashLight.quadratic * (distance * distance));
+	float distance = length(flashLight.position - FragPos);
+	float attenuation = 1.0 / (flashLight.constant + flashLight.linear * distance + flashLight.quadratic * (distance * distance));
 
-		vec3 ambient = flashLight.ambient * vec3(texture(material.diffuse, TexCoords));
+	vec3 ambient = flashLight.ambient * vec3(texture(material.diffuse, TexCoords));
 
-		vec3 norm = normalize(Normal);
-		vec3 lightDir = normalize(flashLight.position - FragPos);
-		float diff = max(dot(norm, lightDir), 0.0);
-		vec3 diffuse = flashLight.diffuse * (diff * vec3(texture(material.diffuse, TexCoords)));
+	vec3 norm = normalize(Normal);
+	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 diffuse = flashLight.diffuse * (diff * vec3(texture(material.diffuse, TexCoords)));
 
-		vec3 viewDir = normalize(viewPos - FragPos);
-		vec3 reflectDir = reflect(-lightDir, norm);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-		vec3 specular = flashLight.specular * (spec * vec3(texture(material.specular, TexCoords)));
+	vec3 viewDir = normalize(viewPos - FragPos);
+	vec3 reflectDir = reflect(-lightDir, norm);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+	vec3 specular = flashLight.specular * (spec * vec3(texture(material.specular, TexCoords)));
 
-		ambient *= attenuation;
-		diffuse *= attenuation;
-		specular *= attenuation;
+	diffuse *= intensity * attenuation;
+	specular *= intensity * attenuation;
 
-		result = (ambient + diffuse + specular);
-	}
-	else
-		result = vec3(flashLight.ambient * vec3(texture(material.diffuse, TexCoords)));
+	result = (ambient + diffuse + specular);
 	return result;
 }
 
