@@ -19,6 +19,12 @@
     <Filter Include="Resource Files\Images">
       <UniqueIdentifier>{4c507c56-4d90-46b8-842e-1a7865201fbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Models">
+      <UniqueIdentifier>{955d344d-c332-4044-b838-c972e99755eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Models\nanosuit">
+      <UniqueIdentifier>{a3cc17b1-ac34-435e-b055-7d7098626ff8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +47,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="res\shaders\shader.fs">
@@ -55,22 +67,89 @@
     <None Include="res\shaders\light.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\images\wall.jpg">
+    <None Include="res\models\nanosuit\nanosuit.blend">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\nanosuit.mtl">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\shaders\model.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\model.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\models\nanosuit\nanosuit.obj">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\LICENSE.txt">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\leg_showroom_spec.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\leg_showroom_ddn.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\leg_dif.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\helmet_showroom_spec.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\helmet_showroom_ddn.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\helmet_diff.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\hand_showroom_spec.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\hand_showroom_ddn.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\hand_dif.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\glass_dif.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\glass_ddn.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\body_showroom_spec.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\body_showroom_ddn.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\body_dif.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\arm_showroom_spec.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\arm_showroom_ddn.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\models\nanosuit\arm_dif.png">
+      <Filter>Resource Files\Models\nanosuit</Filter>
+    </None>
+    <None Include="res\images\wall.jpg">
       <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="res\images\container.jpg">
+    </None>
+    <None Include="res\images\container2_specular.png">
       <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="res\images\awesomeface.png">
+    </None>
+    <None Include="res\images\container2.png">
       <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="res\images\container2.png">
+    </None>
+    <None Include="res\images\container.jpg">
       <Filter>Resource Files\Images</Filter>
-    </Image>
-    <Image Include="res\images\container2_specular.png">
+    </None>
+    <None Include="res\images\awesomeface.png">
       <Filter>Resource Files\Images</Filter>
-    </Image>
+    </None>
   </ItemGroup>
 </Project>

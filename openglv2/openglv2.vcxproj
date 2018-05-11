@@ -151,21 +151,87 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="res\models\nanosuit\nanosuit.blend" />
+    <None Include="res\models\nanosuit\nanosuit.mtl" />
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\light.vs" />
+    <None Include="res\shaders\model.fs" />
+    <None Include="res\shaders\model.vs" />
     <None Include="res\shaders\shader.fs" />
     <None Include="res\shaders\shader.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\images\awesomeface.png" />
-    <Image Include="res\images\container.jpg" />
-    <Image Include="res\images\container2.png" />
-    <Image Include="res\images\container2_specular.png" />
-    <Image Include="res\images\wall.jpg" />
+    <None Include="res\images\awesomeface.png" />
+    <None Include="res\images\container.jpg" />
+    <None Include="res\images\container2.png" />
+    <None Include="res\images\container2_specular.png" />
+    <None Include="res\images\wall.jpg" />
+    <None Include="res\models\nanosuit\arm_dif.png" />
+    <None Include="res\models\nanosuit\arm_showroom_ddn.png" />
+    <None Include="res\models\nanosuit\arm_showroom_spec.png" />
+    <None Include="res\models\nanosuit\body_dif.png" />
+    <None Include="res\models\nanosuit\body_showroom_ddn.png" />
+    <None Include="res\models\nanosuit\body_showroom_spec.png" />
+    <None Include="res\models\nanosuit\glass_ddn.png" />
+    <None Include="res\models\nanosuit\glass_dif.png" />
+    <None Include="res\models\nanosuit\hand_dif.png" />
+    <None Include="res\models\nanosuit\hand_showroom_ddn.png" />
+    <None Include="res\models\nanosuit\hand_showroom_spec.png" />
+    <None Include="res\models\nanosuit\helmet_diff.png" />
+    <None Include="res\models\nanosuit\helmet_showroom_ddn.png" />
+    <None Include="res\models\nanosuit\helmet_showroom_spec.png" />
+    <None Include="res\models\nanosuit\leg_dif.png" />
+    <None Include="res\models\nanosuit\leg_showroom_ddn.png" />
+    <None Include="res\models\nanosuit\leg_showroom_spec.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="res\shaders\light.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\shaders\light.vs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\shaders\shader.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\shaders\shader.vs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="res\images\awesomeface.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\images\container.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\images\container2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\images\container2_specular.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="res\images\wall.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\models\nanosuit\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\models\nanosuit\nanosuit.obj">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </DeploymentContent>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
