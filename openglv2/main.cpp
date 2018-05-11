@@ -182,6 +182,12 @@ int main()
 		glm::vec3(1.5f,  0.2f, -1.5f),
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(0.7f,  0.2f,  2.0f),
+		glm::vec3(2.3f, -3.3f, -4.0f),
+		glm::vec3(-4.0f,  2.0f, -12.0f),
+		glm::vec3(0.0f,  0.0f, -3.0f)
+	};
 
 	GLuint VBO, VAO, EBO;
 	GLuint lightVAO;
@@ -263,25 +269,34 @@ int main()
 		lightingShader.setVec3("viewPos", camera.Position);
 		lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		lightingShader.setFloat("material.shininess", 32.0f);
-		lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-		lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-		lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		lightingShader.setVec3("light.position", lightCurrPos);
-		lightingShader.setFloat("light.constant", 1.0f);
-		lightingShader.setFloat("light.linear", 0.09f);
-		lightingShader.setFloat("light.quadratic", 0.032f);
 		lightingShader.setInt("material.diffuse", 0);
 		lightingShader.setInt("material.specular", 1);
+		for (GLuint i = 0; i < 4; i++)
+		{
+			std::string pointLight;
+			pointLight = "pointLights[" + std::to_string(i) + "]";
+			lightingShader.setVec3(pointLight + ".ambient", 0.0f, 0.0f, 0.0f);
+			lightingShader.setVec3(pointLight + ".diffuse", 0.5f, 0.5f, 0.5f);
+			lightingShader.setVec3(pointLight + ".specular", 1.0f, 1.0f, 1.0f);
+			lightingShader.setVec3(pointLight + ".position", pointLightPositions[i]);
+			lightingShader.setFloat(pointLight + ".constant", 1.0f);
+			lightingShader.setFloat(pointLight + ".linear", 0.09f);
+			lightingShader.setFloat(pointLight + ".quadratic", 0.032f);
+		}
 		lightingShader.setVec3("flashLight.position", camera.Position);
 		lightingShader.setVec3("flashLight.direction", camera.Front);
 		lightingShader.setFloat("flashLight.cutOff", glm::cos(glm::radians(12.5f)));
 		lightingShader.setFloat("flashLight.outerCutOff", glm::cos(glm::radians(17.5f)));
-		lightingShader.setVec3("flashLight.ambient", 0.2f, 0.2f, 0.2f);
+		lightingShader.setVec3("flashLight.ambient", 0.0f, 0.0f, 0.0f);
 		lightingShader.setVec3("flashLight.diffuse", 0.5f, 0.5f, 0.5f);
 		lightingShader.setVec3("flashLight.specular", 1.0f, 1.0f, 1.0f);
 		lightingShader.setFloat("flashLight.constant", 1.0f);
 		lightingShader.setFloat("flashLight.linear", 0.09f);
 		lightingShader.setFloat("flashLight.quadratic", 0.032f);
+		lightingShader.setVec3("dirLight.direction", 0.2f, 0.2f, 0.2f);
+		lightingShader.setVec3("dirLight.ambient", 0.0f, 0.0f, 0.0f);
+		lightingShader.setVec3("dirLight.diffuse", 0.5f, 0.5f, 0.5f);
+		lightingShader.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
 		glActiveTexture(GL_TEXTURE1);
@@ -299,15 +314,17 @@ int main()
 		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 		lampShader.use();
-		glm::mat4 lightModel;
-		lightModel = glm::translate(lightModel, lightCurrPos);
-		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-		lampShader.setMat4("view", view);
-		lampShader.setMat4("projection", projection);
-		lampShader.setMat4("model", lightModel);
-
 		glBindVertexArray(lightVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (GLuint i = 0; i < 4; i++)
+		{
+			glm::mat4 lightModel;
+			lightModel = glm::translate(lightModel, pointLightPositions[i]);
+			lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+			lampShader.setMat4("view", view);
+			lampShader.setMat4("projection", projection);
+			lampShader.setMat4("model", lightModel);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 

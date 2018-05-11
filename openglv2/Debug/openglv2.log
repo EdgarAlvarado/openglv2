@@ -1,11 +1,11 @@
 ﻿  main.cpp
-d:\etc\projects\openglv2\openglv2\main.cpp(231): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(379): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(380): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(384): warning C4244: 'initializing': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(385): warning C4244: 'initializing': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(386): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(387): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(394): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(237): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(396): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(397): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(401): warning C4244: 'initializing': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(402): warning C4244: 'initializing': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(403): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(404): warning C4244: '=': conversion from 'GLdouble' to 'GLfloat', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(411): warning C4244: 'argument': conversion from 'GLdouble' to 'float', possible loss of data
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)
