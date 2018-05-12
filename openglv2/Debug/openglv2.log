@@ -1,13 +1,15 @@
 ﻿  main.cpp
 d:\etc\projects\openglv2\openglv2\main.cpp(26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 d:\etc\projects\openglv2\openglv2\main.cpp(27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(178): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(264): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(265): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(269): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(270): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(272): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(273): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(282): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(182): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(239): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\etc\projects\openglv2\openglv2\main.cpp(306): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(307): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(311): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(312): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(314): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(315): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(324): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  LINK : D:\etc\projects\openglv2\Debug\openglv2.exe not found or not built by the last incremental link; performing full link
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)
