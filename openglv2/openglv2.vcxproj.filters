@@ -154,6 +154,12 @@
     <None Include="res\shaders\singleColor.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\quad.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\quad.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\grass.png">
