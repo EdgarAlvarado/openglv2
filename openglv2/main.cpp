@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -75,6 +76,7 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 							// build and compile shaders
 							// -------------------------
@@ -187,11 +189,11 @@ int main()
 	// -------------
 	unsigned int cubeTexture = loadTexture("res/images/container.jpg");
 	unsigned int floorTexture = loadTexture("res/images/wall.jpg");
-	unsigned int transparentTexture = loadTexture("res/images/grass.png");
+	unsigned int transparentTexture = loadTexture("res/images/blending_transparent_window.png");
 
 	// transparent vegetation locations
 	// --------------------------------
-	std::vector<glm::vec3> vegetation
+	std::vector<glm::vec3> windows
 	{
 		glm::vec3(-1.5f, 0.0f, -0.48f),
 		glm::vec3(1.5f, 0.0f, 0.51f),
@@ -248,13 +250,19 @@ int main()
 		model = glm::mat4();
 		shader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		// vegetation
+		// windows
 		glBindVertexArray(transparentVAO);
 		glBindTexture(GL_TEXTURE_2D, transparentTexture);
-		for (GLuint i = 0; i < vegetation.size(); i++)
+		std::map<float, glm::vec3> sorted;
+		for (GLuint i = 0; i < windows.size(); i++)
+		{
+			GLfloat distance = glm::length(camera.Position - windows[i]);
+			sorted[distance] = windows[i];
+		}
+		for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
 		{
 			model = glm::mat4();
-			model = glm::translate(model, vegetation[i]);
+			model = glm::translate(model, it->second);
 			shader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
