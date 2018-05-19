@@ -155,4 +155,9 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\images\grass.png">
+      <Filter>Resource Files\Images</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
