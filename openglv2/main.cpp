@@ -18,10 +18,15 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
+bool keyPressed(GLFWwindow *window, int key);
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
+GLboolean inverse = false;
+GLboolean grayScale = false;
+GLboolean kernel = false;
+
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -29,9 +34,10 @@ float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
 
-// timing
+// timing and control
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+GLboolean keysPrevState[GLFW_KEY_LAST];
 
 int main()
 {
@@ -344,6 +350,9 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		screenShader.use();
+		screenShader.setBool("inverse", inverse);
+		screenShader.setBool("grayScale", grayScale);
+		screenShader.setBool("kernel", kernel);
 		glBindVertexArray(quadVAO);
 		glDisable(GL_DEPTH_TEST);
 		glBindTexture(GL_TEXTURE_2D, texColorBuffer);
@@ -372,6 +381,13 @@ void processInput(GLFWwindow *window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (keyPressed(window, GLFW_KEY_I))
+		inverse = !inverse;
+	if (keyPressed(window, GLFW_KEY_G))
+		grayScale = !grayScale;
+	if (keyPressed(window, GLFW_KEY_B))
+		kernel = !kernel;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -461,5 +477,19 @@ unsigned int loadTexture(char const *path)
 	}
 
 	return textureID;
+}
+
+bool keyPressed(GLFWwindow *window, int key)
+{
+	if (GLFW_PRESS == glfwGetKey(window, key) && GLFW_RELEASE == keysPrevState[key])
+	{
+		keysPrevState[key] = GLFW_PRESS;
+		return true;
+	}
+	else if (GLFW_RELEASE == glfwGetKey(window, key))
+	{
+		keysPrevState[key] = GLFW_RELEASE;
+	}
+	return false;
 }
 
