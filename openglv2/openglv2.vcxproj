@@ -159,6 +159,8 @@
   <ItemGroup>
     <None Include="res\models\nanosuit\nanosuit.blend" />
     <None Include="res\models\nanosuit\nanosuit.mtl" />
+    <None Include="res\shaders\cubemap.fs" />
+    <None Include="res\shaders\cubemap.vs" />
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\light.vs" />
     <None Include="res\shaders\model.fs" />
@@ -239,6 +241,12 @@
   <ItemGroup>
     <Image Include="res\images\blending_transparent_window.png" />
     <Image Include="res\images\grass.png" />
+    <Image Include="res\images\skybox\back.jpg" />
+    <Image Include="res\images\skybox\bottom.jpg" />
+    <Image Include="res\images\skybox\front.jpg" />
+    <Image Include="res\images\skybox\left.jpg" />
+    <Image Include="res\images\skybox\right.jpg" />
+    <Image Include="res\images\skybox\top.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

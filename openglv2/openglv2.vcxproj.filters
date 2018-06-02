@@ -25,6 +25,9 @@
     <Filter Include="Resource Files\Models\nanosuit">
       <UniqueIdentifier>{a3cc17b1-ac34-435e-b055-7d7098626ff8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Images\skybox">
+      <UniqueIdentifier>{587697d5-5843-48ac-acae-e513c36186e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -160,6 +163,12 @@
     <None Include="res\shaders\quad.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\cubemap.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\cubemap.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\grass.png">
@@ -167,6 +176,24 @@
     </Image>
     <Image Include="res\images\blending_transparent_window.png">
       <Filter>Resource Files\Images</Filter>
+    </Image>
+    <Image Include="res\images\skybox\back.jpg">
+      <Filter>Resource Files\Images\skybox</Filter>
+    </Image>
+    <Image Include="res\images\skybox\bottom.jpg">
+      <Filter>Resource Files\Images\skybox</Filter>
+    </Image>
+    <Image Include="res\images\skybox\front.jpg">
+      <Filter>Resource Files\Images\skybox</Filter>
+    </Image>
+    <Image Include="res\images\skybox\left.jpg">
+      <Filter>Resource Files\Images\skybox</Filter>
+    </Image>
+    <Image Include="res\images\skybox\right.jpg">
+      <Filter>Resource Files\Images\skybox</Filter>
+    </Image>
+    <Image Include="res\images\skybox\top.jpg">
+      <Filter>Resource Files\Images\skybox</Filter>
     </Image>
   </ItemGroup>
 </Project>
