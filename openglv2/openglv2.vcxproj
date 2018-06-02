@@ -167,6 +167,8 @@
     <None Include="res\shaders\model.vs" />
     <None Include="res\shaders\quad.fs" />
     <None Include="res\shaders\quad.vs" />
+    <None Include="res\shaders\reflect.fs" />
+    <None Include="res\shaders\reflect.vs" />
     <None Include="res\shaders\shader.fs" />
     <None Include="res\shaders\shader.vs" />
     <None Include="res\shaders\singleColor.fs" />

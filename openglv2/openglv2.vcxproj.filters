@@ -169,6 +169,12 @@
     <None Include="res\shaders\cubemap.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\reflect.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\reflect.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\grass.png">
