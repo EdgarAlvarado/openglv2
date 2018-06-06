@@ -147,6 +147,7 @@ private:
 		{
 			aiString str;
 			mat->GetTexture(type, i, &str);
+			std::cout << str.C_Str() << std::endl;
 			GLboolean skip = false;
 			for (GLuint j = 0; j < textures_loaded.size(); j++)
 			{

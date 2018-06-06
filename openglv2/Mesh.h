@@ -49,6 +49,7 @@ public:
 	}
 	void Draw(Shader shader)
 	{
+		//setupMesh();
 		GLuint diffuseNr = 0;
 		GLuint specularNr = 0;
 		GLuint normalNr = 0;
@@ -68,16 +69,19 @@ public:
 			else if ("texture_height" == name)
 				number = to_string(++heightNr);
 
-			shader.setFloat((name + number).c_str(), i);
+			shader.setInt((name + number).c_str(), i);
+			//std::cout << (name + number) << std::endl;
 			glBindTexture(GL_TEXTURE_2D, textures[i].id);
 		}
 
 		// draw mesh
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		//GLenum pepe = glGetError();
 		glBindVertexArray(0);
 
 		glActiveTexture(GL_TEXTURE0);
+		//glDeleteVertexArrays(1, &VAO);
 	}
 private:
 	/* Render data */
@@ -92,11 +96,12 @@ private:
 		glBindVertexArray(VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		GLenum caca = glGetError();
 		glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-
+		GLenum pepe = glGetError();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
+		GLenum cool = glGetError();
 		//Vertex positions
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
@@ -107,10 +112,10 @@ private:
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 		// Vertex tangent
-		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 		// Vertex normals
-		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(4);
 		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
 
 		glBindVertexArray(0);

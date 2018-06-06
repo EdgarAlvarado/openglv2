@@ -159,6 +159,8 @@
   <ItemGroup>
     <None Include="res\models\nanosuit\nanosuit.blend" />
     <None Include="res\models\nanosuit\nanosuit.mtl" />
+    <None Include="res\shaders\basic.fs" />
+    <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\cubemap.fs" />
     <None Include="res\shaders\cubemap.vs" />
     <None Include="res\shaders\light.fs" />
@@ -179,23 +181,6 @@
     <None Include="res\images\container2.png" />
     <None Include="res\images\container2_specular.png" />
     <None Include="res\images\wall.jpg" />
-    <None Include="res\models\nanosuit\arm_dif.png" />
-    <None Include="res\models\nanosuit\arm_showroom_ddn.png" />
-    <None Include="res\models\nanosuit\arm_showroom_spec.png" />
-    <None Include="res\models\nanosuit\body_dif.png" />
-    <None Include="res\models\nanosuit\body_showroom_ddn.png" />
-    <None Include="res\models\nanosuit\body_showroom_spec.png" />
-    <None Include="res\models\nanosuit\glass_ddn.png" />
-    <None Include="res\models\nanosuit\glass_dif.png" />
-    <None Include="res\models\nanosuit\hand_dif.png" />
-    <None Include="res\models\nanosuit\hand_showroom_ddn.png" />
-    <None Include="res\models\nanosuit\hand_showroom_spec.png" />
-    <None Include="res\models\nanosuit\helmet_diff.png" />
-    <None Include="res\models\nanosuit\helmet_showroom_ddn.png" />
-    <None Include="res\models\nanosuit\helmet_showroom_spec.png" />
-    <None Include="res\models\nanosuit\leg_dif.png" />
-    <None Include="res\models\nanosuit\leg_showroom_ddn.png" />
-    <None Include="res\models\nanosuit\leg_showroom_spec.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="res\shaders\light.fs">
@@ -229,18 +214,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\models\nanosuit\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\models\nanosuit\nanosuit.obj">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </DeploymentContent>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </ExcludedFromBuild>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="res\images\blending_transparent_window.png" />
     <Image Include="res\images\grass.png" />
     <Image Include="res\images\skybox\back.jpg" />
@@ -249,6 +222,37 @@
     <Image Include="res\images\skybox\left.jpg" />
     <Image Include="res\images\skybox\right.jpg" />
     <Image Include="res\images\skybox\top.jpg" />
+    <Image Include="res\models\nanosuit\arm_dif.png" />
+    <Image Include="res\models\nanosuit\arm_showroom_ddn.png" />
+    <Image Include="res\models\nanosuit\arm_showroom_refl.png" />
+    <Image Include="res\models\nanosuit\arm_showroom_spec.png" />
+    <Image Include="res\models\nanosuit\body_dif.png" />
+    <Image Include="res\models\nanosuit\body_showroom_ddn.png" />
+    <Image Include="res\models\nanosuit\body_showroom_refl.png" />
+    <Image Include="res\models\nanosuit\body_showroom_spec.png" />
+    <Image Include="res\models\nanosuit\glass_ddn.png" />
+    <Image Include="res\models\nanosuit\glass_dif.png" />
+    <Image Include="res\models\nanosuit\glass_refl.png" />
+    <Image Include="res\models\nanosuit\hand_dif.png" />
+    <Image Include="res\models\nanosuit\hand_showroom_ddn.png" />
+    <Image Include="res\models\nanosuit\hand_showroom_refl.png" />
+    <Image Include="res\models\nanosuit\hand_showroom_spec.png" />
+    <Image Include="res\models\nanosuit\helmet_diff.png" />
+    <Image Include="res\models\nanosuit\helmet_showroom_ddn.png" />
+    <Image Include="res\models\nanosuit\helmet_showroom_refl.png" />
+    <Image Include="res\models\nanosuit\helmet_showroom_spec.png" />
+    <Image Include="res\models\nanosuit\leg_dif.png" />
+    <Image Include="res\models\nanosuit\leg_showroom_ddn.png" />
+    <Image Include="res\models\nanosuit\leg_showroom_refl.png" />
+    <Image Include="res\models\nanosuit\leg_showroom_spec.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\models\nanosuit\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\models\nanosuit\nanosuit.obj">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

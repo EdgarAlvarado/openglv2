@@ -8,6 +8,7 @@
 
 #include "shader.h"
 #include "camera.h"
+#include "Model.h"
 
 #include <iostream>
 #include <vector>
@@ -98,10 +99,11 @@ int main()
 
 							// build and compile shaders
 							// -------------------------
-	Shader shader("res/shaders/model.vs", "res/shaders/model.fs");
+	Shader shader("res/shaders/basic.vs", "res/shaders/basic.fs");
 	Shader reflectShader("res/shaders/reflect.vs", "res/shaders/reflect.fs");
 	Shader screenShader("res/shaders/quad.vs", "res/shaders/quad.fs");
 	Shader skyboxShader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
+	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -213,6 +215,7 @@ int main()
 		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
 		5.0f, -0.5f,  5.0f,  2.0f, 0.0f
 	};
+	
 	float transparentVertices[] = {
 		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
 		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
@@ -348,6 +351,8 @@ int main()
 		std::cout << "ERROR::FRAMEBUFFER:: framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	Model nanoModel = Model("res/models/nanosuit/nanosuit.obj");
+
 	// draw as wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -385,6 +390,9 @@ int main()
 		reflectShader.use();
 		reflectShader.setMat4("projection", projection);
 		reflectShader.setMat4("view", view);
+		modelShader.use();
+		modelShader.setMat4("projection", projection);
+		modelShader.setMat4("view", view);
 
 		// cubes
 		shader.use();
@@ -409,14 +417,24 @@ int main()
 		model = glm::mat4();
 		shader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		GLenum pepe = glGetError();
+		//model
+		modelShader.use();
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
+		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		modelShader.setMat4("model", model);
+		modelShader.setVec3("cameraPos", camera.Position);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		nanoModel.Draw(modelShader);
 		//skybox
-		//glDepthMask(GL_FALSE);
+		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);
 		skyboxShader.use();
 		glBindVertexArray(skyboxVAO);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glDepthMask(GL_TRUE);
+		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);
 		// windows
 		shader.use();
