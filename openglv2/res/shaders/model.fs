@@ -18,18 +18,12 @@ void main()
 	vec4 finalColor;
 	vec4 diffuse = texture(texture_diffuse1, TexCoords);
 	vec3 normal = texture(texture_normal1, TexCoords).rgb;
-	vec4 reflFactor = texture(texture_height1, TexCoords);
+	vec4 reflFactor = normalize(texture(texture_height1, TexCoords));
 
 	vec3 I = normalize(Pos - cameraPos);
 	vec3 R = reflect(I, normalize(Normal));
 	vec4 reflectColor = vec4(texture(skybox, R).rgb, 1.0);
 
-	//finalColor = (reflFactor.r * reflectColor) + ((1.0 - reflFactor.r) * diffuse);
-	finalColor = ((reflFactor.r * reflectColor) + (1.0 - reflFactor.r)) + diffuse;
-	//finalColor = (1.0 - diffuse) + ( reflectColor * reflFactor);
-
-    FragColor = vec4(reflectColor.rgb, 1.0);
-	//FragColor = vec4(TexCoords, 0.0, 1.0);
-	//FragColor = Pos;
+	FragColor = vec4(mix(diffuse, reflectColor, reflFactor.r).rgb, 1.0);
 }
 

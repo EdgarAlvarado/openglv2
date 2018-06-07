@@ -425,6 +425,8 @@ int main()
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		modelShader.setMat4("model", model);
 		modelShader.setVec3("cameraPos", camera.Position);
+		glActiveTexture(GL_TEXTURE4);
+		modelShader.setInt("skybox", 4);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		nanoModel.Draw(modelShader);
 		//skybox
