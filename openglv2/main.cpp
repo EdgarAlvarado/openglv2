@@ -351,6 +351,16 @@ int main()
 		std::cout << "ERROR::FRAMEBUFFER:: framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	//Create unifrom buffer
+	GLuint uboMatrices;
+	glGenBuffers(1, &uboMatrices);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
+
 	Model nanoModel = Model("res/models/nanosuit/nanosuit.obj");
 
 	// draw as wireframe
@@ -380,19 +390,16 @@ int main()
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model;
+
+		glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		
-		shader.use();
-		shader.setMat4("projection", projection);
-		shader.setMat4("view", view);
-		skyboxShader.use();
-		skyboxShader.setMat4("projection", projection);
-		skyboxShader.setMat4("view", glm::mat4(glm::mat3(view)));
-		reflectShader.use();
-		reflectShader.setMat4("projection", projection);
-		reflectShader.setMat4("view", view);
-		modelShader.use();
-		modelShader.setMat4("projection", projection);
-		modelShader.setMat4("view", view);
+		shader.setUniformBlock("Matrices", 0);
+		skyboxShader.setUniformBlock("Matrices", 0);
+		reflectShader.setUniformBlock("Matrices", 0);
+		modelShader.setUniformBlock("Matrices", 0);
 
 		// cubes
 		shader.use();

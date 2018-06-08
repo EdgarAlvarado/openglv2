@@ -82,6 +82,11 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 	}
 
+	void setUniformBlock(const std::string &name, const int value)
+	{
+		glUniformBlockBinding(ID, glGetUniformBlockIndex(ID, name.c_str()), value);
+	}
+
 private:
 
 };
