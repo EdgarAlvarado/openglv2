@@ -30,6 +30,7 @@ GLboolean inverse = false;
 GLboolean grayScale = false;
 GLboolean kernel = false;
 GLboolean explode = false;
+GLboolean normalDisplay = false;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -439,7 +440,7 @@ int main()
 		if (explode)
 			AddLocalTime(deltaTime);
 		else
-			localTime = 0.0;
+			localTime = 5.0;
 		modelShader.setFloat("time", localTime);
 		modelShader.setVec3("cameraPos", camera.Position);
 		modelShader.setBool("exploding", explode);
@@ -447,9 +448,12 @@ int main()
 		modelShader.setInt("skybox", 4);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		nanoModel.Draw(modelShader);
-		normalShader.use();
-		normalShader.setMat4("model", model);
-		nanoModel.Draw(modelShader);
+		if (normalDisplay)
+		{
+			normalShader.use();
+			normalShader.setMat4("model", model);
+			nanoModel.Draw(modelShader);
+		}
 		//skybox
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);
@@ -521,6 +525,8 @@ void processInput(GLFWwindow *window)
 		grayScale = !grayScale;
 	if (keyPressed(window, GLFW_KEY_B))
 		kernel = !kernel;
+	if (keyPressed(window, GLFW_KEY_N))
+		normalDisplay = !normalDisplay;
 	if (keyPressed(window, GLFW_KEY_SPACE))
 		explode = !explode;
 
