@@ -29,7 +29,7 @@ const unsigned int SCR_HEIGHT = 720;
 GLboolean inverse = false;
 GLboolean grayScale = false;
 GLboolean kernel = false;
-
+GLboolean explode = false;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -107,6 +107,7 @@ int main()
 	Shader screenShader("res/shaders/quad.vs", "res/shaders/quad.fs");
 	Shader skyboxShader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
 	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs", "res/shaders/model.gs");
+	Shader normalShader("res/shaders/model.vs", "res/shaders/singleColor.fs", "res/shaders/normal.gs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -403,6 +404,7 @@ int main()
 		skyboxShader.setUniformBlock("Matrices", 0);
 		reflectShader.setUniformBlock("Matrices", 0);
 		modelShader.setUniformBlock("Matrices", 0);
+		normalShader.setUniformBlock("Matrices", 0);
 
 		// cubes
 		shader.use();
@@ -434,12 +436,18 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		modelShader.setMat4("model", model);
-		AddLocalTime(deltaTime);
+		if (explode)
+			AddLocalTime(deltaTime);
+		else
+			localTime = 0.0;
 		modelShader.setFloat("time", localTime);
 		modelShader.setVec3("cameraPos", camera.Position);
+		modelShader.setBool("exploding", explode);
 		glActiveTexture(GL_TEXTURE4);
 		modelShader.setInt("skybox", 4);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		nanoModel.Draw(modelShader);
+		normalShader.use();
 		nanoModel.Draw(modelShader);
 		//skybox
 		glDepthMask(GL_FALSE);
@@ -512,6 +520,8 @@ void processInput(GLFWwindow *window)
 		grayScale = !grayScale;
 	if (keyPressed(window, GLFW_KEY_B))
 		kernel = !kernel;
+	if (keyPressed(window, GLFW_KEY_SPACE))
+		explode = !explode;
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);

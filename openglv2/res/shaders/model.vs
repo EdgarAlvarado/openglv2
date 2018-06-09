@@ -5,11 +5,10 @@ layout (location = 2) in vec2 aTexCoords;
 
 out VS_OUT
 {
+	vec3 pos;
 	vec2 texCoords;
-	vec4 normal;
+	vec3 normal;
 } vs_out;
-out vec3 Pos;
-out vec3 Normal;
 
 uniform mat4 model;
 layout (std140) uniform Matrices
@@ -22,7 +21,6 @@ void main()
 {
 	gl_Position = model * vec4(aPos, 1.0);
     vs_out.texCoords = aTexCoords;
-	Normal = mat3(transpose(inverse(model))) * aNormal;
-	vs_out.normal = normalize(projection * view * mat4(mat3(transpose(inverse(model)))) * vec4(aNormal, 0.0));
-	Pos = vec3(model * vec4(aPos, 1.0));
+	vs_out.normal = aNormal;
+	vs_out.pos = aPos;
 }
