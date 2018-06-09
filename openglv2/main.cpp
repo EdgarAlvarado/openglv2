@@ -21,6 +21,7 @@ void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 bool keyPressed(GLFWwindow *window, int key);
 GLuint loadCubemap(std::vector<std::string>);
+void AddLocalTime(float time);
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -39,6 +40,8 @@ bool firstMouse = true;
 // timing and control
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+GLfloat localTime = 0.0f;
+float timeFactor = 0.5f;
 GLboolean keysPrevState[GLFW_KEY_LAST];
 
 std::vector<std::string> faces
@@ -431,7 +434,8 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		modelShader.setMat4("model", model);
-		modelShader.setFloat("time", glfwGetTime());
+		AddLocalTime(deltaTime);
+		modelShader.setFloat("time", localTime);
 		modelShader.setVec3("cameraPos", camera.Position);
 		glActiveTexture(GL_TEXTURE4);
 		modelShader.setInt("skybox", 4);
@@ -644,3 +648,7 @@ GLuint loadCubemap(std::vector<std::string> faces)
 	return textureID;
 }
 
+void AddLocalTime(float time)
+{
+	localTime += time * timeFactor;
+}

@@ -9,6 +9,11 @@ in VS_OUT {
 
 out vec2 TexCoords;
 
+layout (std140) uniform Matrices
+{
+	mat4 projection;
+	mat4 view;
+};
 uniform float time;
 
 vec4 explode(vec4 position, vec3 normal);
@@ -17,13 +22,13 @@ vec3 GetNormal();
 void main() {
 	vec3 normal = GetNormal();
 
-	gl_Position = explode(gl_in[0].gl_Position, normal);
+	gl_Position = projection * view * explode(gl_in[0].gl_Position, normal);
 	TexCoords = gs_in[0].texCoords;
 	EmitVertex();
-	gl_Position = explode(gl_in[1].gl_Position, normal);
+	gl_Position = projection * view * explode(gl_in[1].gl_Position, normal);
 	TexCoords = gs_in[1].texCoords;
 	EmitVertex();
-	gl_Position = explode(gl_in[2].gl_Position, normal);
+	gl_Position = projection * view * explode(gl_in[2].gl_Position, normal);
 	TexCoords = gs_in[2].texCoords;
 	EmitVertex();
 	EndPrimitive();
@@ -40,5 +45,5 @@ vec3 GetNormal()
 {
 	vec3 a = vec3(gl_in[0].gl_Position) - vec3(gl_in[1].gl_Position);
 	vec3 b = vec3(gl_in[2].gl_Position) - vec3(gl_in[1].gl_Position);
-	return normalize(cross(a, b));
+	return normalize(cross(b, a));
 }

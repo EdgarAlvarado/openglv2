@@ -20,7 +20,7 @@ layout (std140) uniform Matrices
 
 void main()
 {
-	gl_Position = projection * view * model * vec4(aPos, 1.0);
+	gl_Position = model * vec4(aPos, 1.0);
     vs_out.texCoords = aTexCoords;
 	Normal = mat3(transpose(inverse(model))) * aNormal;
 	vs_out.normal = normalize(projection * view * mat4(mat3(transpose(inverse(model)))) * vec4(aNormal, 0.0));
