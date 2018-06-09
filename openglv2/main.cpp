@@ -103,7 +103,7 @@ int main()
 	Shader reflectShader("res/shaders/reflect.vs", "res/shaders/reflect.fs");
 	Shader screenShader("res/shaders/quad.vs", "res/shaders/quad.fs");
 	Shader skyboxShader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
-	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs");
+	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs", "res/shaders/model.gs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -431,6 +431,7 @@ int main()
 		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
 		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
 		modelShader.setMat4("model", model);
+		modelShader.setFloat("time", glfwGetTime());
 		modelShader.setVec3("cameraPos", camera.Position);
 		glActiveTexture(GL_TEXTURE4);
 		modelShader.setInt("skybox", 4);

@@ -2,15 +2,16 @@
 d:\etc\projects\openglv2\openglv2\main.cpp(35): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 d:\etc\projects\openglv2\openglv2\main.cpp(36): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 d:\etc\projects\openglv2\openglv2\main.cpp(375): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(472): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
+d:\etc\projects\openglv2\openglv2\main.cpp(434): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 d:\etc\projects\openglv2\openglv2\main.cpp(473): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
 d:\etc\projects\openglv2\openglv2\main.cpp(474): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
-d:\etc\projects\openglv2\openglv2\main.cpp(536): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(475): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
 d:\etc\projects\openglv2\openglv2\main.cpp(537): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(541): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(538): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 d:\etc\projects\openglv2\openglv2\main.cpp(542): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(544): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(543): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 d:\etc\projects\openglv2\openglv2\main.cpp(545): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(554): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(546): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\etc\projects\openglv2\openglv2\main.cpp(555): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
   openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)

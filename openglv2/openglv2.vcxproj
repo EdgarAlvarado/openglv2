@@ -166,6 +166,7 @@
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\light.vs" />
     <None Include="res\shaders\model.fs" />
+    <None Include="res\shaders\model.gs" />
     <None Include="res\shaders\model.vs" />
     <None Include="res\shaders\quad.fs" />
     <None Include="res\shaders\quad.vs" />

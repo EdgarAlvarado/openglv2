@@ -11,7 +11,7 @@ uniform sampler2D texture_normal1;
 uniform sampler2D texture_height1;
 uniform samplerCube skybox;
 uniform vec3 cameraPos;
-uniform mat4 model;
+uniform float time;
 
 void main()
 {
