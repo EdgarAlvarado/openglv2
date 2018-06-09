@@ -448,6 +448,7 @@ int main()
 		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 		nanoModel.Draw(modelShader);
 		normalShader.use();
+		normalShader.setMat4("model", model);
 		nanoModel.Draw(modelShader);
 		//skybox
 		glDepthMask(GL_FALSE);

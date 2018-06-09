@@ -31,16 +31,16 @@ void main()
 
 vec3 GetNormal()
 {
-	vec3 a = vec3(gl_in[0].gl_Position) - vec3(gl_in[1].gl_Position);
-	vec3 b = vec3(gl_in[2].gl_Position) - vec3(gl_in[1].gl_Position);
+	vec3 a = vec3(gs_in[0].pos) - vec3(gs_in[1].pos);
+	vec3 b = vec3(gs_in[2].pos) - vec3(gs_in[1].pos);
 	return normalize(cross(b, a));
 }
 
 void GenerateLine(int index)
 {
-	gl_Position = projection * view * gl_in[index].gl_Position;
+	gl_Position = projection * view * model * vec4(gs_in[index].pos, 1.0);
 	EmitVertex();
-	gl_Position = projection * view * (gl_in[index].gl_Position + vec4(GetNormal(), 0.0) * MAGNITUDE);
+	gl_Position = projection * view * model * (vec4(gs_in[index].pos, 1.0) + vec4(gs_in[index].normal, 0.0) * MAGNITUDE);
 	EmitVertex();
 	EndPrimitive();
 }
