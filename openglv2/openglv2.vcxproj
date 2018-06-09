@@ -169,6 +169,8 @@
     <None Include="res\shaders\model.gs" />
     <None Include="res\shaders\model.vs" />
     <None Include="res\shaders\normal.gs" />
+    <None Include="res\shaders\planet.fs" />
+    <None Include="res\shaders\planet.vs" />
     <None Include="res\shaders\quad.fs" />
     <None Include="res\shaders\quad.vs" />
     <None Include="res\shaders\reflect.fs" />

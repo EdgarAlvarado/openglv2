@@ -109,6 +109,7 @@ int main()
 	Shader skyboxShader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
 	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs", "res/shaders/model.gs");
 	Shader normalShader("res/shaders/model.vs", "res/shaders/singleColor.fs", "res/shaders/normal.gs");
+	Shader spaceShader("res/shaders/planet.vs", "res/shaders/planet.fs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -367,6 +368,41 @@ int main()
 	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
 
 	Model nanoModel = Model("res/models/nanosuit/nanosuit.obj");
+	Model planetModel = Model("res/models/planet/planet.obj");
+	Model asteroidModel = Model("res/models/rock/rock.obj");
+
+	// Implement asteroids
+	GLuint amount = 1000;
+	glm::mat4 *modelMatrices;
+	modelMatrices = new glm::mat4[amount];
+	srand(glfwGetTime());
+	float radius = 50.0f;
+	float offset = 2.5f;
+	for (GLuint i = 0; i < amount; i++)
+	{
+		glm::mat4 model;
+		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
+		float angle = (float)i / (float)amount * 360.0f;
+		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float x = sin(angle) * radius + displacement;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float y = displacement * 0.4f + 2.0f;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y, z));
+
+		// 2. scale: Scale between 0.05 and 0.25
+		float scale = (rand() % 20) / 100.0f + 0.05;
+		model = glm::scale(model, glm::vec3(scale));
+
+		// 3. rotation: add rotation around a (semi)randomly picked rotation axis vector
+		float rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+		// 4. now add to list of matrices
+		modelMatrices[i] = model;
+	}
+
 
 	// draw as wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -406,6 +442,7 @@ int main()
 		reflectShader.setUniformBlock("Matrices", 0);
 		modelShader.setUniformBlock("Matrices", 0);
 		normalShader.setUniformBlock("Matrices", 0);
+		spaceShader.setUniformBlock("Matrices", 0);
 
 		// cubes
 		shader.use();
@@ -454,6 +491,18 @@ int main()
 			normalShader.setMat4("model", model);
 			nanoModel.Draw(modelShader);
 		}
+		//Planet and asteroids
+		spaceShader.use();
+		model = glm::mat4();
+		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+		spaceShader.setMat4("model", model);
+		planetModel.Draw(spaceShader);
+		for (GLuint i = 0; i < amount; i++)
+		{
+			spaceShader.setMat4("model", modelMatrices[i]);
+			asteroidModel.Draw(spaceShader);
+		}
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0, 0.0f))
 		//skybox
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);

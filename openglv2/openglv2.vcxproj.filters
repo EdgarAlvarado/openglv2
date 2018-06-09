@@ -133,6 +133,12 @@
     <None Include="res\shaders\normal.gs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\planet.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="res\shaders\planet.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\grass.png">
