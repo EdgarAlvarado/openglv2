@@ -47,12 +47,21 @@ GLboolean keysPrevState[GLFW_KEY_LAST];
 
 std::vector<std::string> faces
 {
-	"right.jpg",
-	"left.jpg",
-	"top.jpg",
-	"bottom.jpg",
-	"front.jpg",
-	"back.jpg"
+	"skybox/right.jpg",
+	"skybox/left.jpg",
+	"skybox/top.jpg",
+	"skybox/bottom.jpg",
+	"skybox/front.jpg",
+	"skybox/back.jpg"
+};
+std::vector<std::string> nebulaFaces
+{
+	"nebula/purplenebula_rt.tga",
+	"nebula/purplenebula_lf.tga",
+	"nebula/purplenebula_up.tga",
+	"nebula/purplenebula_dn.tga",
+	"nebula/purplenebula_bk.tga",
+	"nebula/purplenebula_ft.tga"
 };
 
 int main()
@@ -101,8 +110,8 @@ int main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_CULL_FACE);
 
-							// build and compile shaders
-							// -------------------------
+	// build and compile shaders
+	// -------------------------
 	Shader shader("res/shaders/basic.vs", "res/shaders/basic.fs");
 	Shader reflectShader("res/shaders/reflect.vs", "res/shaders/reflect.fs");
 	Shader screenShader("res/shaders/quad.vs", "res/shaders/quad.fs");
@@ -110,6 +119,7 @@ int main()
 	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs", "res/shaders/model.gs");
 	Shader normalShader("res/shaders/model.vs", "res/shaders/singleColor.fs", "res/shaders/normal.gs");
 	Shader spaceShader("res/shaders/planet.vs", "res/shaders/planet.fs");
+	Shader instanceShader("res/shaders/instance.vs", "res/shaders/planet.fs");
 
 	// set up vertex data (and buffer(s)) and configure vertex attributes
 	// ------------------------------------------------------------------
@@ -221,7 +231,7 @@ int main()
 		-5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
 		5.0f, -0.5f,  5.0f,  2.0f, 0.0f
 	};
-	
+
 	float transparentVertices[] = {
 		// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
 		0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
@@ -242,6 +252,37 @@ int main()
 		1.0f, -1.0f,  1.0f, 0.0f,
 		1.0f,  1.0f,  1.0f, 1.0f
 	};
+	// Implement asteroids
+	GLuint amount = 10000;
+	glm::mat4 *modelMatrices;
+	modelMatrices = new glm::mat4[amount];
+	srand(glfwGetTime());
+	float radius = 20.0f;
+	float offset = 2.5f;
+	for (GLuint i = 0; i < amount; i++)
+	{
+		glm::mat4 model;
+		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
+		float angle = (float)i / (float)amount * 360.0f;
+		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float x = sin(angle) * radius + displacement;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float y = displacement * 0.4f + 2.0f;
+		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
+		float z = cos(angle) * radius + displacement;
+		model = glm::translate(model, glm::vec3(x, y, z));
+
+		// 2. scale: Scale between 0.05 and 0.25
+		float scale = (rand() % 20) / 100.0f + 0.05;
+		model = glm::scale(model, glm::vec3(scale));
+
+		// 3. rotation: add rotation around a (semi)randomly picked rotation axis vector
+		float rotAngle = (rand() % 360);
+		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
+
+		// 4. now add to list of matrices
+		modelMatrices[i] = model;
+	}
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
 	glGenVertexArrays(1, &cubeVAO);
@@ -308,7 +349,7 @@ int main()
 	unsigned int cubeTexture = loadTexture("res/images/container.jpg");
 	unsigned int floorTexture = loadTexture("res/images/wall.jpg");
 	unsigned int transparentTexture = loadTexture("res/images/blending_transparent_window.png");
-	unsigned int cubemapTexture = loadCubemap(faces);
+	unsigned int cubemapTexture = loadCubemap(nebulaFaces);
 
 	// transparent vegetation locations
 	// --------------------------------
@@ -371,38 +412,32 @@ int main()
 	Model planetModel = Model("res/models/planet/planet.obj");
 	Model asteroidModel = Model("res/models/rock/rock.obj");
 
-	// Implement asteroids
-	GLuint amount = 1000;
-	glm::mat4 *modelMatrices;
-	modelMatrices = new glm::mat4[amount];
-	srand(glfwGetTime());
-	float radius = 50.0f;
-	float offset = 2.5f;
-	for (GLuint i = 0; i < amount; i++)
+	//Asteroid instance buffer
+	GLuint instanceBuffer;
+	glGenBuffers(1, &instanceBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
+	for (GLuint i = 0; i < asteroidModel.GetMeshes().size(); i++)
 	{
-		glm::mat4 model;
-		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
-		float angle = (float)i / (float)amount * 360.0f;
-		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float x = sin(angle) * radius + displacement;
-		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float y = displacement * 0.4f + 2.0f;
-		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float z = cos(angle) * radius + displacement;
-		model = glm::translate(model, glm::vec3(x, y, z));
+		asteroidModel.GetMeshes()[i].useVAO();
+		//Vertex attributes
+		GLsizei vec4Size = sizeof(glm::vec4);
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
+		glEnableVertexAttribArray(4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(vec4Size));
+		glEnableVertexAttribArray(5);
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * vec4Size));
+		glEnableVertexAttribArray(6);
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * vec4Size));
 
-		// 2. scale: Scale between 0.05 and 0.25
-		float scale = (rand() % 20) / 100.0f + 0.05;
-		model = glm::scale(model, glm::vec3(scale));
+		glVertexAttribDivisor(3, 1);
+		glVertexAttribDivisor(4, 1);
+		glVertexAttribDivisor(5, 1);
+		glVertexAttribDivisor(6, 1);
 
-		// 3. rotation: add rotation around a (semi)randomly picked rotation axis vector
-		float rotAngle = (rand() % 360);
-		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
-
-		// 4. now add to list of matrices
-		modelMatrices[i] = model;
+		glBindVertexArray(0);
 	}
-
 
 	// draw as wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -497,12 +532,13 @@ int main()
 		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
 		spaceShader.setMat4("model", model);
 		planetModel.Draw(spaceShader);
-		for (GLuint i = 0; i < amount; i++)
+		instanceShader.use();
+		model = glm::mat4();
+		instanceShader.setMat4("model", model);
+		for (GLint i = 0; i < asteroidModel.GetMeshes().size(); i++)
 		{
-			spaceShader.setMat4("model", modelMatrices[i]);
-			asteroidModel.Draw(spaceShader);
+			asteroidModel.GetMeshes()[i].DrawInstance(instanceShader, amount);
 		}
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0, 0.0f))
 		//skybox
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);
@@ -692,7 +728,7 @@ GLuint loadCubemap(std::vector<std::string> faces)
 	GLint width, height, nrChannels;
 	for (GLuint i = 0; i < faces.size(); i++)
 	{
-		unsigned char *data = stbi_load(("res/images/skybox/" + faces[i]).c_str(), &width, &height, &nrChannels, 0);
+		unsigned char *data = stbi_load(("res/images/" + faces[i]).c_str(), &width, &height, &nrChannels, 0);
 		if (data)
 		{
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);

@@ -38,6 +38,11 @@ public:
 			meshes[i].Draw(shader);
 		}
 	}
+
+	vector<Mesh> GetMeshes()
+	{
+		return this->meshes;
+	}
 private:
 	/* Model Data */
 	vector<Mesh> meshes;

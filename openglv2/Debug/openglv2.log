@@ -1,15 +1,16 @@
 ﻿  main.cpp
 c:\edgar\proyectos\openglv2\openglv2\main.cpp(37): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
 c:\edgar\proyectos\openglv2\openglv2\main.cpp(38): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(378): warning C4244: 'argumento': conversión de 'double' a 'unsigned int'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(395): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(399): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(416): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(607): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(608): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(612): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(613): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(615): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(616): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
-c:\edgar\proyectos\openglv2\openglv2\main.cpp(625): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(259): warning C4244: 'argumento': conversión de 'double' a 'unsigned int'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(276): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(280): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(451): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(538): warning C4018: '<': no coinciden signed/unsigned
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(643): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(644): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(648): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(649): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(651): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(652): warning C4244: '=': conversión de 'double' a 'float'; posible pérdida de datos
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(661): warning C4244: 'argumento': conversión de 'double' a 'float'; posible pérdida de datos
   openglv2.vcxproj -> C:\Edgar\proyectos\openglv2\Debug\openglv2.exe

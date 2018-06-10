@@ -83,6 +83,43 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 		//glDeleteVertexArrays(1, &VAO);
 	}
+	void DrawInstance(Shader shader, GLint amount)
+	{
+		GLuint diffuseNr = 0;
+		GLuint specularNr = 0;
+		GLuint normalNr = 0;
+		GLuint heightNr = 0;
+		for (GLuint i = 0; i < textures.size(); i++)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+
+			string number;
+			string name = textures[i].type;
+			if ("texture_diffuse" == name)
+				number = to_string(++diffuseNr);
+			else if ("texture_specular" == name)
+				number = to_string(++specularNr);
+			else if ("texture_normal" == name)
+				number = to_string(++normalNr);
+			else if ("texture_height" == name)
+				number = to_string(++heightNr);
+
+			shader.setInt((name + number).c_str(), i);
+			//std::cout << (name + number) << std::endl;
+			glBindTexture(GL_TEXTURE_2D, textures[i].id);
+		}
+
+		// draw mesh
+		glBindVertexArray(VAO);
+		glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, amount);
+		glBindVertexArray(0);
+
+		glActiveTexture(GL_TEXTURE0);
+	}
+	void useVAO()
+	{
+		glBindVertexArray(VAO);
+	}
 private:
 	/* Render data */
 	GLuint VAO, VBO, EBO;

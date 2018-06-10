@@ -163,6 +163,7 @@
     <None Include="res\shaders\basic.vs" />
     <None Include="res\shaders\cubemap.fs" />
     <None Include="res\shaders\cubemap.vs" />
+    <None Include="res\shaders\instance.vs" />
     <None Include="res\shaders\light.fs" />
     <None Include="res\shaders\light.vs" />
     <None Include="res\shaders\model.fs" />
