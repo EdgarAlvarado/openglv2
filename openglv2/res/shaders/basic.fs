@@ -11,8 +11,8 @@ uniform sampler2D texture1;
 uniform vec3 viewPos;
 layout (std140) uniform Lights
 {
-	vec3 lightPositions[4];
-	vec3 lightColors[4];
+	vec4 lightPositions[4];
+	vec4 lightColors[4];
 };
 
 vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor);
@@ -22,9 +22,9 @@ void main()
     vec4 color = texture(texture1, fs_in.TexCoords);
 	vec3 lighting = vec3(0.0);
 	for(int i = 0; i < 4; ++i)
-		lighting += BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, lightPositions[i], lightColors[i]);
+		lighting += BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, lightPositions[i].rgb, lightColors[i].rgb);
 	color *= vec4(lighting, 1.0);
-	FragColor = color;
+	FragColor = vec4(lighting, 1.0);
 }
 
 vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)

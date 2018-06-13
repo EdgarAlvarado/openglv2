@@ -321,12 +321,12 @@ int main()
 	glGenBuffers(1, &lightPositionsBuffer);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, lightPositionsBuffer);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(lightPositions) + sizeof(lightColors), NULL, GL_STATIC_DRAW);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(lightPositions), &lightPositions[0][0]);
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(lightPositions), sizeof(lightColors), &lightColors[0][0]);
+	glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(glm::vec4), NULL, GL_STATIC_DRAW);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, 4 * sizeof(glm::vec4), &lightPositions[0][0]);
+	glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), 4 * sizeof(glm::vec4), &lightColors[0][0]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	glBindBufferRange(GL_UNIFORM_BUFFER, 1, lightPositionsBuffer, 0, sizeof(lightPositions) + sizeof(lightColors));
+	glBindBufferRange(GL_UNIFORM_BUFFER, 1, lightPositionsBuffer, 0, 8 * sizeof(glm::vec4));
 
 	Model nanoModel = Model("res/models/nanosuit/nanosuit.obj");
 	Model planetModel = Model("res/models/planet/planet.obj");
@@ -415,7 +415,7 @@ int main()
 		for (int i = 0; i < 4; i++)
 		{
 			model = glm::mat4();
-			model = glm::translate(model, lightPositions[i]);
+			model = glm::translate(model, glm::vec3(lightPositions[i]));
 			model = glm::scale(model, glm::vec3(0.2f));
 			shader.setMat4("model", model);
 			glDrawArrays(GL_TRIANGLES, 0, 36);

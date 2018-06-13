@@ -121,17 +121,17 @@ float quadVertices[] = {
 	1.0f, -1.0f,  1.0f, 0.0f,
 	1.0f,  1.0f,  1.0f, 1.0f
 };
-glm::vec3 lightPositions[] = {
-	glm::vec3(-3.0f, 0.0f, 0.0f),
-	glm::vec3(-1.0f, 0.0f, 0.0f),
-	glm::vec3(1.0f, 0.0f, 0.0f),
-	glm::vec3(3.0f, 0.0f, 0.0f)
+glm::vec4 lightPositions[] = {
+	glm::vec4(-3.0f, 0.0f, 0.0f, 0.0),
+	glm::vec4(-1.0f, 0.0f, 0.0f, 0.0),
+	glm::vec4(1.0f, 0.0f, 0.0f, 0.0),
+	glm::vec4(3.0f, 0.0f, 0.0f, 0.0)
 };
-glm::vec3 lightColors[] = {
-	glm::vec3(0.25),
-	glm::vec3(0.50),
-	glm::vec3(0.75),
-	glm::vec3(1.00)
+glm::vec4 lightColors[] = {
+	glm::vec4(0.25),
+	glm::vec4(0.50),
+	glm::vec4(0.75),
+	glm::vec4(1.00)
 };
 
 #endif // !POSITIONS_H
