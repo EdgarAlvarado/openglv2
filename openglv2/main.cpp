@@ -23,6 +23,7 @@ unsigned int loadTexture(const char *path);
 bool keyPressed(GLFWwindow *window, int key);
 GLuint loadCubemap(std::vector<std::string>);
 void AddLocalTime(float time);
+void GenerateTangents();
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
@@ -137,41 +138,13 @@ int main()
 	is correct.
 	*/
 
-	// Implement asteroids
-	GLuint amount = 10000;
-	glm::mat4 *modelMatrices;
-	modelMatrices = new glm::mat4[amount];
-	srand(glfwGetTime());
-	float radius = 20.0f;
-	float offset = 2.5f;
-	for (GLuint i = 0; i < amount; i++)
-	{
-		glm::mat4 model;
-		// 1. translation: displace along circle with 'radius' in range [-offset, offset]
-		float angle = (float)i / (float)amount * 360.0f;
-		float displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float x = sin(angle) * radius + displacement;
-		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float y = displacement * 0.4f + 2.0f;
-		displacement = (rand() % (int)(2 * offset * 100)) / 100.0f - offset;
-		float z = cos(angle) * radius + displacement;
-		model = glm::translate(model, glm::vec3(x, y, z));
+	GenerateTangents();
 
-		// 2. scale: Scale between 0.05 and 0.25
-		float scale = (rand() % 20) / 100.0f + 0.05;
-		model = glm::scale(model, glm::vec3(scale));
-
-		// 3. rotation: add rotation around a (semi)randomly picked rotation axis vector
-		float rotAngle = (rand() % 360);
-		model = glm::rotate(model, rotAngle, glm::vec3(0.4f, 0.6f, 0.8f));
-
-		// 4. now add to list of matrices
-		modelMatrices[i] = model;
-	}
 	// cube VAO
-	unsigned int cubeVAO, cubeVBO;
+	unsigned int cubeVAO, cubeVBO, cubeTangentVBO;
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &cubeVBO);
+	glGenBuffers(1, &cubeTangentVBO);
 	glBindVertexArray(cubeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
@@ -181,11 +154,16 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glBindBuffer(GL_ARRAY_BUFFER, cubeTangentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeTangents), &cubeTangents[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
 	// plane VAO
-	unsigned int planeVAO, planeVBO;
+	unsigned int planeVAO, planeVBO, planeTangentVBO;
 	glGenVertexArrays(1, &planeVAO);
 	glGenBuffers(1, &planeVBO);
+	glGenBuffers(1, &planeTangentVBO);
 	glBindVertexArray(planeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
@@ -195,11 +173,16 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glBindBuffer(GL_ARRAY_BUFFER, planeTangentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(planeTangents), &planeTangents[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
 	// transparent VAO
-	unsigned int transparentVAO, transparentVBO;
+	unsigned int transparentVAO, transparentVBO, transparentTangentVBO;
 	glGenVertexArrays(1, &transparentVAO);
 	glGenBuffers(1, &transparentVBO);
+	glGenBuffers(1, &transparentTangentVBO);
 	glBindVertexArray(transparentVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, transparentVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentVertices), transparentVertices, GL_STATIC_DRAW);
@@ -209,6 +192,10 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glBindBuffer(GL_ARRAY_BUFFER, transparentTangentVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(transparentTangents), &transparentTangents[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
 	//quad VAO
 	GLuint quadVAO, quadVBO;
@@ -227,7 +214,7 @@ int main()
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
 	glBindVertexArray(skyboxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), skyboxVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -623,4 +610,86 @@ GLuint loadCubemap(std::vector<std::string> faces)
 void AddLocalTime(float time)
 {
 	localTime += time * timeFactor;
+}
+
+void GenerateTangents()
+{
+	//Cube tangents
+	for (int i = 0; i < 288; i+=24)
+	{
+		glm::vec3 tangent;
+		glm::vec3 pos1 = glm::vec3(cubeVertices[i], cubeVertices[i + 1], cubeVertices[i + 2]);
+		glm::vec3 pos2 = glm::vec3(cubeVertices[i + 8], cubeVertices[i + 9], cubeVertices[i + 10]);
+		glm::vec3 pos3 = glm::vec3(cubeVertices[i + 16], cubeVertices[i + 17], cubeVertices[i + 18]);
+
+		glm::vec2 uv1 = glm::vec2(cubeVertices[i + 6], cubeVertices[i + 7]);
+		glm::vec2 uv2 = glm::vec2(cubeVertices[i + 14], cubeVertices[i + 15]);
+		glm::vec2 uv3 = glm::vec2(cubeVertices[i + 22], cubeVertices[i + 23]);
+
+		glm::vec3 edge1 = pos2 - pos1;
+		glm::vec3 edge2 = pos3 - pos1;
+		glm::vec2 deltaUV1 = uv2 - uv1;
+		glm::vec2 deltaUV2 = uv3 - uv1;
+
+		float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		tangent = glm::normalize(tangent);
+
+		cubeTangents.push_back(tangent);
+	}
+	//Plane tangents
+	for (int i = 0; i < 48; i += 24)
+	{
+		glm::vec3 tangent;
+		glm::vec3 pos1 = glm::vec3(planeVertices[i], planeVertices[i + 1], planeVertices[i + 2]);
+		glm::vec3 pos2 = glm::vec3(planeVertices[i + 8], planeVertices[i + 9], planeVertices[i + 10]);
+		glm::vec3 pos3 = glm::vec3(planeVertices[i + 16], planeVertices[i + 17], planeVertices[i + 18]);
+
+		glm::vec2 uv1 = glm::vec2(planeVertices[i + 6], planeVertices[i + 7]);
+		glm::vec2 uv2 = glm::vec2(planeVertices[i + 14], planeVertices[i + 15]);
+		glm::vec2 uv3 = glm::vec2(planeVertices[i + 22], planeVertices[i + 23]);
+
+		glm::vec3 edge1 = pos2 - pos1;
+		glm::vec3 edge2 = pos3 - pos1;
+		glm::vec2 deltaUV1 = uv2 - uv1;
+		glm::vec2 deltaUV2 = uv3 - uv1;
+
+		float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		tangent = glm::normalize(tangent);
+
+		planeTangents.push_back(tangent);
+	}
+	//Window tangents
+	for (int i = 0; i < 48; i += 24)
+	{
+		glm::vec3 tangent;
+		glm::vec3 pos1 = glm::vec3(transparentVertices[i], transparentVertices[i + 1], transparentVertices[i + 2]);
+		glm::vec3 pos2 = glm::vec3(transparentVertices[i + 8], transparentVertices[i + 9], transparentVertices[i + 10]);
+		glm::vec3 pos3 = glm::vec3(transparentVertices[i + 16], transparentVertices[i + 17], transparentVertices[i + 18]);
+
+		glm::vec2 uv1 = glm::vec2(transparentVertices[i + 6], transparentVertices[i + 7]);
+		glm::vec2 uv2 = glm::vec2(transparentVertices[i + 14], transparentVertices[i + 15]);
+		glm::vec2 uv3 = glm::vec2(transparentVertices[i + 22], transparentVertices[i + 23]);
+
+		glm::vec3 edge1 = pos2 - pos1;
+		glm::vec3 edge2 = pos3 - pos1;
+		glm::vec2 deltaUV1 = uv2 - uv1;
+		glm::vec2 deltaUV2 = uv3 - uv1;
+
+		float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		tangent = glm::normalize(tangent);
+
+		transparentTangents.push_back(tangent);
+	}
 }

@@ -46,6 +46,7 @@ float cubeVertices[] = {
 	-0.5f,  0.5f, -0.5f,	0.0f,  1.0f,  0.0f,		0.0f, 1.0f, // top-left
 	-0.5f,  0.5f,  0.5f,	0.0f,  1.0f,  0.0f,		0.0f, 0.0f// bottom-left
 };
+vector<glm::vec3> cubeTangents;
 float skyboxVertices[] = {
 	// positions          
 	-1.0f,  1.0f, -1.0f,
@@ -100,7 +101,7 @@ float planeVertices[] = {
 	-5.0f, -0.5f, -5.0f,	0.0, 1.0, 0.0,	0.0f, 2.0f,
 	5.0f, -0.5f,  5.0f,		0.0, 1.0, 0.0,	2.0f, 0.0f
 };
-
+vector<glm::vec3> planeTangents;
 float transparentVertices[] = {
 	// positions			//Normals		// texture Coords (swapped y coordinates because texture is flipped upside down)
 	0.0f,  0.5f,  0.0f,		0.0, 0.0, 1.0, 0.0f,  0.0f,
@@ -111,6 +112,7 @@ float transparentVertices[] = {
 	1.0f, -0.5f,  0.0f,		0.0, 0.0, 1.0, 1.0f,  1.0f,
 	1.0f,  0.5f,  0.0f,		0.0, 0.0, 1.0, 1.0f,  0.0f
 };
+vector<glm::vec3> transparentTangents;
 float quadVertices[] = {
 	// positions   // texCoords
 	-1.0f,  1.0f,  0.0f, 1.0f,
