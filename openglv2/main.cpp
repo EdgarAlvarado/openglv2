@@ -119,10 +119,7 @@ int main()
 	Shader reflectShader("res/shaders/reflect.vs", "res/shaders/reflect.fs");
 	Shader screenShader("res/shaders/quad.vs", "res/shaders/quad.fs");
 	Shader skyboxShader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
-	Shader modelShader("res/shaders/model.vs", "res/shaders/model.fs", "res/shaders/model.gs");
 	Shader normalShader("res/shaders/model.vs", "res/shaders/singleColor.fs", "res/shaders/normal.gs");
-	Shader spaceShader("res/shaders/planet.vs", "res/shaders/planet.fs");
-	Shader instanceShader("res/shaders/instance.vs", "res/shaders/planet.fs");
 	//shader
 	//reflectShader
 	//modelShader
@@ -321,43 +318,12 @@ int main()
 	glGenBuffers(1, &lightPositionsBuffer);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, lightPositionsBuffer);
-	glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(glm::vec4), NULL, GL_STATIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, 4 * sizeof(glm::vec4), &lightPositions[0][0]);
 	glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), 4 * sizeof(glm::vec4), &lightColors[0][0]);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	glBindBufferRange(GL_UNIFORM_BUFFER, 1, lightPositionsBuffer, 0, 8 * sizeof(glm::vec4));
-
-	Model nanoModel = Model("res/models/nanosuit/nanosuit.obj");
-	Model planetModel = Model("res/models/planet/planet.obj");
-	Model asteroidModel = Model("res/models/rock/rock.obj");
-
-	//Asteroid instance buffer
-	GLuint instanceBuffer;
-	glGenBuffers(1, &instanceBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, instanceBuffer);
-	glBufferData(GL_ARRAY_BUFFER, amount * sizeof(glm::mat4), &modelMatrices[0], GL_STATIC_DRAW);
-	for (GLuint i = 0; i < asteroidModel.GetMeshes().size(); i++)
-	{
-		asteroidModel.GetMeshes()[i].useVAO();
-		//Vertex attributes
-		GLsizei vec4Size = sizeof(glm::vec4);
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(vec4Size));
-		glEnableVertexAttribArray(5);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * vec4Size));
-		glEnableVertexAttribArray(6);
-		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * vec4Size));
-
-		glVertexAttribDivisor(3, 1);
-		glVertexAttribDivisor(4, 1);
-		glVertexAttribDivisor(5, 1);
-		glVertexAttribDivisor(6, 1);
-
-		glBindVertexArray(0);
-	}
 
 	// draw as wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -391,17 +357,19 @@ int main()
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
 		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		lightPositions[0] = lightPositionsOriginal[0] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
+		lightPositions[1] = lightPositionsOriginal[1] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
+		lightPositions[2] = lightPositionsOriginal[2] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
+		lightPositions[3] = lightPositionsOriginal[3] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
+		glBindBuffer(GL_UNIFORM_BUFFER, lightPositionsBuffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, 4 * sizeof(glm::vec4), &lightPositions[0][0]);
+		glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), 4 * sizeof(glm::vec4), &lightColors[0][0]);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		
 		shader.setUniformBlock("Matrices", 0);
 		skyboxShader.setUniformBlock("Matrices", 0);
 		reflectShader.setUniformBlock("Matrices", 0);
-		modelShader.setUniformBlock("Matrices", 0);
-		normalShader.setUniformBlock("Matrices", 0);
-		spaceShader.setUniformBlock("Matrices", 0);
 		shader.setUniformBlock("Lights", 1);
-		reflectShader.setUniformBlock("Lights", 1);
-		modelShader.setUniformBlock("Lights", 1);
-		normalShader.setUniformBlock("Lights", 1);
 
 		// cubes
 		shader.use();
@@ -434,43 +402,6 @@ int main()
 		model = glm::mat4();
 		shader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		GLenum pepe = glGetError();
-		//model
-		modelShader.use();
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, -0.5f, 0.0f));
-		model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
-		modelShader.setMat4("model", model);
-		if (explode)
-			AddLocalTime(deltaTime);
-		else
-			localTime = 5.0;
-		modelShader.setFloat("time", localTime);
-		modelShader.setVec3("cameraPos", camera.Position);
-		modelShader.setBool("exploding", explode);
-		glActiveTexture(GL_TEXTURE4);
-		modelShader.setInt("skybox", 4);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		nanoModel.Draw(modelShader);
-		if (normalDisplay)
-		{
-			normalShader.use();
-			normalShader.setMat4("model", model);
-			nanoModel.Draw(modelShader);
-		}
-		//Planet and asteroids
-		spaceShader.use();
-		model = glm::mat4();
-		model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
-		spaceShader.setMat4("model", model);
-		planetModel.Draw(spaceShader);
-		instanceShader.use();
-		model = glm::mat4();
-		instanceShader.setMat4("model", model);
-		for (GLint i = 0; i < asteroidModel.GetMeshes().size(); i++)
-		{
-			asteroidModel.GetMeshes()[i].DrawInstance(instanceShader, amount);
-		}
 		//skybox
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);
@@ -560,6 +491,8 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+
+
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

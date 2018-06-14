@@ -24,7 +24,7 @@ void main()
 	for(int i = 0; i < 4; ++i)
 		lighting += BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, lightPositions[i].rgb, lightColors[i].rgb);
 	color *= vec4(lighting, 1.0);
-	FragColor = vec4(lighting, 1.0);
+	FragColor = color;
 }
 
 vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
@@ -43,7 +43,7 @@ vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
     // simple attenuation
     float max_distance = 1.5;
     float distance = length(lightPos - fragPos);
-    float attenuation = 1.0 / (distance * distance);
+    float attenuation = 1.0 / (distance);
     
     diffuse *= attenuation;
     specular *= attenuation;
