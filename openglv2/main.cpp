@@ -707,6 +707,7 @@ void DrawScene(const Shader &shader)
 	// cubes
 	glEnable(GL_CULL_FACE);
 	glBindVertexArray(cubeVAO);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, cubeTexture);
 	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
 	shader.setMat4("model", model);

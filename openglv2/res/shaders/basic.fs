@@ -47,8 +47,8 @@ vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, float
     //float attenuation = 1.0 / (distance);
 
 	//Calculate shadow
-	//vec3 lighting = (1.0 - shadow) * (diffuse + specular);
-	vec3 lighting = (diffuse + specular);
+	vec3 lighting = (1.0 - shadow) * (diffuse + specular);
+	//vec3 lighting = (diffuse + specular);
     
     //diffuse *= attenuation;
     //specular *= attenuation;

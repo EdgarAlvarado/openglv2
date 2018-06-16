@@ -1,17 +1,17 @@
 ﻿  main.cpp
-d:\etc\projects\openglv2\openglv2\main.cpp(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(44): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(357): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(408): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
-d:\etc\projects\openglv2\openglv2\main.cpp(409): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
-d:\etc\projects\openglv2\openglv2\main.cpp(410): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
-d:\etc\projects\openglv2\openglv2\main.cpp(480): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(481): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(485): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(486): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(488): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(489): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(498): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-d:\etc\projects\openglv2\openglv2\main.cpp(704): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.exe
-  openglv2.vcxproj -> D:\etc\projects\openglv2\Debug\openglv2.pdb (Full PDB)
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(43): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(44): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(357): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(408): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(409): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(410): warning C4800: 'GLboolean': forcing value to bool 'true' or 'false' (performance warning)
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(480): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(481): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(485): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(486): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(488): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(489): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(498): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\edgar\proyectos\openglv2\openglv2\main.cpp(704): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  openglv2.vcxproj -> C:\Edgar\proyectos\openglv2\Debug\openglv2.exe
+  openglv2.vcxproj -> C:\Edgar\proyectos\openglv2\Debug\openglv2.pdb (Full PDB)
