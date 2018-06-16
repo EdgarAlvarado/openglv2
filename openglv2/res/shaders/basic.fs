@@ -15,20 +15,19 @@ uniform vec3 viewPos;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
-vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, float shadow);
-float ShadowCalculation(vec4 fragPosLightSpace);
+vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, vec4 fragPosLightSpace);
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir);
 
 void main()
 {    
     vec4 color = texture(texture1, fs_in.TexCoords);
 	vec3 ambient = 0.03 * color.rgb;
-	float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
-	vec3 lighting = ambient + BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, lightPosition.rgb, lightColor.rgb, ShadowCalculation(fs_in.FragPosLightSpace));
+	vec3 lighting = ambient + BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, lightPosition.rgb, lightColor.rgb, fs_in.FragPosLightSpace);
 	color *= vec4(lighting, 1.0);
 	FragColor = color;
 }
 
-vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, float shadow)
+vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, vec4 fragPosLightSpace)
 {
     // diffuse
     vec3 lightDir = normalize(lightPos - fragPos);
@@ -47,6 +46,7 @@ vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, float
     //float attenuation = 1.0 / (distance);
 
 	//Calculate shadow
+	float shadow = ShadowCalculation(fragPosLightSpace, normal, lightDir);
 	vec3 lighting = (1.0 - shadow) * (diffuse + specular);
 	//vec3 lighting = (diffuse + specular);
     
@@ -56,7 +56,7 @@ vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor, float
     return lighting;
 }
 
-float ShadowCalculation(vec4 fragPosLightSpace)
+float ShadowCalculation(vec4 fragPosLightSpace, vec3 normal, vec3 lightDir)
 {
 	vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
 	projCoords = projCoords * 0.5 + 0.5;
@@ -64,5 +64,21 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 	float closestDepth = texture(shadowMap, projCoords.xy).r;
 	float currentDepth = projCoords.z;
 
-	return currentDepth > closestDepth ? 1.0 : 0.0;
+	//float bias = max(0.02 * (1.0 - dot(normal, lightDir)), 0.0002); //When we don't have face culling
+	float bias = 0.0002;
+	//float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+	float shadow = 0.0;
+	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+	for(int x = -1; x <= 1; ++x)
+	{
+		for(int y = -1; y <= 1; ++y)
+		{
+			float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+		}
+	}
+	shadow /= 9.0;
+	if(projCoords.z > 1.0)
+		shadow = 0.0;
+	return shadow;
 }
