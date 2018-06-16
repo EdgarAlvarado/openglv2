@@ -23,11 +23,15 @@ unsigned int loadTexture(const char *path);
 bool keyPressed(GLFWwindow *window, int key);
 GLuint loadCubemap(std::vector<std::string>);
 void AddLocalTime(float time);
+void DrawScene(const Shader &shader);
 void GenerateTangents();
+void ConfigureUniforms();
 
 // settings
 const unsigned int SCR_WIDTH = 1280;
 const unsigned int SCR_HEIGHT = 720;
+const unsigned int SHADOW_WIDTH = 1024;
+const unsigned int SHADOW_HEIGHT = 1024;
 GLboolean inverse = false;
 GLboolean grayScale = false;
 GLboolean kernel = false;
@@ -47,6 +51,22 @@ GLfloat localTime = 0.0f;
 float timeFactor = 0.5f;
 GLboolean keysPrevState[GLFW_KEY_LAST];
 
+//Buffer objects
+GLuint uboMatrices;
+GLuint uboLightMatrices;
+
+//Vertex Arrays
+GLuint cubeVAO;
+GLuint planeVAO;
+GLuint transparentVAO;
+GLuint quadVAO;
+GLuint skyboxVAO;
+
+//Textures
+GLuint cubeTexture;
+GLuint floorTexture;
+GLuint transparentTexture;
+GLuint cubemapTexture;
 std::vector<std::string> faces
 {
 	"skybox/right.jpg",
@@ -116,11 +136,13 @@ int main()
 
 	// build and compile shaders
 	// -------------------------
-	Shader shader("res/shaders/basic.vs", "res/shaders/basic.fs");
-	Shader reflectShader("res/shaders/reflect.vs", "res/shaders/reflect.fs");
-	Shader screenShader("res/shaders/quad.vs", "res/shaders/quad.fs");
-	Shader skyboxShader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
-	Shader normalShader("res/shaders/model.vs", "res/shaders/singleColor.fs", "res/shaders/normal.gs");
+	Shader shader = Shader("res/shaders/basic.vs", "res/shaders/basic.fs");
+	Shader reflectShader = Shader("res/shaders/reflect.vs", "res/shaders/reflect.fs");
+	Shader screenShader = Shader("res/shaders/quad.vs", "res/shaders/quad.fs");
+	Shader skyboxShader = Shader("res/shaders/cubemap.vs", "res/shaders/cubemap.fs");
+	Shader normalShader = Shader("res/shaders/model.vs", "res/shaders/singleColor.fs", "res/shaders/normal.gs");
+	Shader singleColorShader = Shader("res/shaders/basic.vs", "res/shaders/singleColor.fs");
+	Shader depthShader = Shader("res/shaders/depthMap.vs", "res/shaders/depthMap.fs");
 	//shader
 	//reflectShader
 	//modelShader
@@ -141,7 +163,7 @@ int main()
 	GenerateTangents();
 
 	// cube VAO
-	unsigned int cubeVAO, cubeVBO, cubeTangentVBO;
+	unsigned int cubeVBO, cubeTangentVBO;
 	glGenVertexArrays(1, &cubeVAO);
 	glGenBuffers(1, &cubeVBO);
 	glGenBuffers(1, &cubeTangentVBO);
@@ -160,7 +182,7 @@ int main()
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
 	// plane VAO
-	unsigned int planeVAO, planeVBO, planeTangentVBO;
+	unsigned int planeVBO, planeTangentVBO;
 	glGenVertexArrays(1, &planeVAO);
 	glGenBuffers(1, &planeVBO);
 	glGenBuffers(1, &planeTangentVBO);
@@ -179,7 +201,7 @@ int main()
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
 	// transparent VAO
-	unsigned int transparentVAO, transparentVBO, transparentTangentVBO;
+	unsigned int transparentVBO, transparentTangentVBO;
 	glGenVertexArrays(1, &transparentVAO);
 	glGenBuffers(1, &transparentVBO);
 	glGenBuffers(1, &transparentTangentVBO);
@@ -198,7 +220,7 @@ int main()
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glBindVertexArray(0);
 	//quad VAO
-	GLuint quadVAO, quadVBO;
+	GLuint quadVBO;
 	glGenVertexArrays(1, &quadVAO);
 	glGenBuffers(1, &quadVBO);
 	glBindVertexArray(quadVAO);
@@ -210,7 +232,7 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 	glBindVertexArray(0);
 	//skybox VAO
-	GLuint skyboxVAO, skyboxVBO;
+	GLuint skyboxVBO;
 	glGenVertexArrays(1, &skyboxVAO);
 	glGenBuffers(1, &skyboxVBO);
 	glBindVertexArray(skyboxVAO);
@@ -222,26 +244,10 @@ int main()
 
 	// load textures
 	// -------------
-	unsigned int cubeTexture = loadTexture("res/images/container.jpg");
-	unsigned int floorTexture = loadTexture("res/images/wall.jpg");
-	unsigned int transparentTexture = loadTexture("res/images/blending_transparent_window.png");
-	unsigned int cubemapTexture = loadCubemap(nebulaFaces);
-
-	// transparent vegetation locations
-	// --------------------------------
-	std::vector<glm::vec3> windows
-	{
-		glm::vec3(-1.5f, 0.0f, -0.48f),
-		glm::vec3(1.5f, 0.0f, 0.51f),
-		glm::vec3(0.0f, 0.0f, 0.7f),
-		glm::vec3(-0.3f, 0.0f, -2.3f),
-		glm::vec3(0.5f, 0.0f, -0.6f)
-	};
-
-	// shader configuration
-	// --------------------
-	shader.use();
-	shader.setInt("texture1", 0);
+	cubeTexture = loadTexture("res/images/container.jpg");
+	floorTexture = loadTexture("res/images/wall.jpg");
+	transparentTexture = loadTexture("res/images/blending_transparent_window.png");
+	cubemapTexture = loadCubemap(nebulaFaces);
 
 	// Create FrameBuffers
 	GLuint framebuffer;
@@ -291,8 +297,24 @@ int main()
 		std::cout << "ERROR::FRAMEBUFFER:: framebuffer is not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	//Depth map for shadows
+	GLuint depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+	GLuint depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	//Create unifrom buffer
-	GLuint uboMatrices;
 	glGenBuffers(1, &uboMatrices);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
@@ -301,16 +323,27 @@ int main()
 
 	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uboMatrices, 0, 2 * sizeof(glm::mat4));
 	//Create lights buffer
-	GLuint lightPositionsBuffer;
-	glGenBuffers(1, &lightPositionsBuffer);
+	glGenBuffers(1, &uboLightMatrices);
 
-	glBindBuffer(GL_UNIFORM_BUFFER, lightPositionsBuffer);
-	glBufferData(GL_UNIFORM_BUFFER, 8 * sizeof(glm::vec4), NULL, GL_DYNAMIC_DRAW);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, 4 * sizeof(glm::vec4), &lightPositions[0][0]);
-	glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), 4 * sizeof(glm::vec4), &lightColors[0][0]);
+	glBindBuffer(GL_UNIFORM_BUFFER, uboLightMatrices);
+	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	glBindBufferRange(GL_UNIFORM_BUFFER, 1, lightPositionsBuffer, 0, 8 * sizeof(glm::vec4));
+	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uboLightMatrices, 0, 2 * sizeof(glm::mat4));
+
+	// shader configuration
+	// --------------------
+	shader.use();
+	shader.setInt("texture1", 0);
+	shader.setInt("shadowMap", 1);
+	shader.setUniformBlock("Matrices", 0);
+	shader.setUniformBlock("LightMatrices", 1);
+	depthShader.use();
+	depthShader.setUniformBlock("LightMatrices", 1);
+	skyboxShader.use();
+	skyboxShader.setUniformBlock("Matrices", 0);
+	reflectShader.use();
+	reflectShader.setUniformBlock("Matrices", 0);
 
 	// draw as wireframe
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -329,66 +362,30 @@ int main()
 		// -----
 		processInput(window);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glEnable(GL_DEPTH_TEST);
+
+		depthShader.use();
+		ConfigureUniforms();
+		DrawScene(depthShader);
+
 		// render
 		// ------
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glEnable(GL_DEPTH_TEST);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
 
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 model;
-
-		glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
-		glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		lightPositions[0] = lightPositionsOriginal[0] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
-		lightPositions[1] = lightPositionsOriginal[1] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
-		lightPositions[2] = lightPositionsOriginal[2] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
-		lightPositions[3] = lightPositionsOriginal[3] * glm::vec4(sin(currentFrame), 1.0, cos(currentFrame), 1.0);
-		glBindBuffer(GL_UNIFORM_BUFFER, lightPositionsBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, 4 * sizeof(glm::vec4), &lightPositions[0][0]);
-		glBufferSubData(GL_UNIFORM_BUFFER, 4 * sizeof(glm::vec4), 4 * sizeof(glm::vec4), &lightColors[0][0]);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		
-		shader.setUniformBlock("Matrices", 0);
-		skyboxShader.setUniformBlock("Matrices", 0);
-		reflectShader.setUniformBlock("Matrices", 0);
-		shader.setUniformBlock("Lights", 1);
-
-		// cubes
+		ConfigureUniforms();
 		shader.use();
-		glEnable(GL_CULL_FACE);
-		glBindVertexArray(cubeVAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		shader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		for (int i = 0; i < 4; i++)
-		{
-			model = glm::mat4();
-			model = glm::translate(model, glm::vec3(lightPositions[i]));
-			model = glm::scale(model, glm::vec3(0.2f));
-			shader.setMat4("model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
-		reflectShader.use();
-		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-		reflectShader.setMat4("model", model);
-		reflectShader.setVec3("cameraPos", camera.Position);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// floor
-		shader.use();
-		glBindVertexArray(planeVAO);
-		glBindTexture(GL_TEXTURE_2D, floorTexture);
-		model = glm::mat4();
-		shader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		shader.setVec3("lightPosition", lightPos);
+		shader.setVec3("lightColor", lightColor);
+		DrawScene(shader);
+
 		//skybox
 		glDepthMask(GL_FALSE);
 		glDepthFunc(GL_LEQUAL);
@@ -398,24 +395,6 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);
-		// windows
-		shader.use();
-		glDisable(GL_CULL_FACE);
-		glBindVertexArray(transparentVAO);
-		glBindTexture(GL_TEXTURE_2D, transparentTexture);
-		std::map<float, glm::vec3> sorted;
-		for (GLuint i = 0; i < windows.size(); i++)
-		{
-			GLfloat distance = glm::length(camera.Position - windows[i]);
-			sorted[distance] = windows[i];
-		}
-		for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
-		{
-			model = glm::mat4();
-			model = glm::translate(model, it->second);
-			shader.setMat4("model", model);
-			glDrawArrays(GL_TRIANGLES, 0, 6);
-		}
 
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO);
@@ -431,6 +410,7 @@ int main()
 		screenShader.setBool("kernel", kernel);
 		glBindVertexArray(quadVAO);
 		glDisable(GL_DEPTH_TEST);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, intTexBuffer);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDisable(GL_FRAMEBUFFER_SRGB);
@@ -692,4 +672,58 @@ void GenerateTangents()
 
 		transparentTangents.push_back(tangent);
 	}
+}
+
+void ConfigureUniforms()
+{
+	glm::mat4 projection;
+	glm::mat4 view;
+	glm::mat4 lightProjection;
+	glm::mat4 lightView;
+
+	lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 75.0f);
+	//glm::perspective(glm::radians(45.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, 1.0f, 7.5f);
+	lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	view = camera.GetViewMatrix();
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uboLightMatrices);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(lightProjection));
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(lightView));
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void DrawScene(const Shader &shader)
+{
+	float currentFrame = glfwGetTime();
+	glm::mat4 model;
+
+	// cubes
+	glEnable(GL_CULL_FACE);
+	glBindVertexArray(cubeVAO);
+	glBindTexture(GL_TEXTURE_2D, cubeTexture);
+	model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+	shader.setMat4("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+	shader.setMat4("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(lightPos));
+	model = glm::scale(model, glm::vec3(0.2f));
+	shader.setMat4("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	// floor
+	glBindVertexArray(planeVAO);
+	glBindTexture(GL_TEXTURE_2D, floorTexture);
+	model = glm::mat4();
+	shader.setMat4("model", model);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

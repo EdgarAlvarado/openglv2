@@ -141,6 +141,18 @@ glm::vec4 lightColors[] = {
 	glm::vec4(0.75),
 	glm::vec4(1.00)
 };
+std::vector<glm::vec3> windows
+{
+	glm::vec3(-1.5f, 0.0f, -0.48f),
+	glm::vec3(1.5f, 0.0f, 0.51f),
+	glm::vec3(0.0f, 0.0f, 0.7f),
+	glm::vec3(-0.3f, 0.0f, -2.3f),
+	glm::vec3(0.5f, 0.0f, -0.6f)
+};
+
+//Lighting info
+glm::vec3 lightPos(-2.0, 2.0f, -1.0f);
+glm::vec3 lightColor(1.f);
 
 #endif // !POSITIONS_H
 
