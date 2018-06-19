@@ -151,6 +151,9 @@
     <None Include="res\shaders\depthMap.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="res\shaders\depthMap.gs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\images\grass.png">

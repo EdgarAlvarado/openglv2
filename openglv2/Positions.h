@@ -152,7 +152,7 @@ std::vector<glm::vec3> windows
 
 //Lighting info
 glm::vec3 lightPos(-2.0, 2.0f, -1.0f);
-glm::vec3 lightColor(1.f);
+glm::vec3 lightColor(1.0f);
 
 #endif // !POSITIONS_H
 

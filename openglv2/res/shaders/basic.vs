@@ -9,7 +9,6 @@ out VS_OUT {
 	vec3 FragPos;
 	vec3 Normal;
 	vec2 TexCoords;
-	vec4 FragPosLightSpace;
 	mat3 TBN;
 } vs_out;
 
@@ -31,7 +30,6 @@ void main()
 	vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
 	vs_out.Normal = aNormal;
     vs_out.TexCoords = aTexCoords;
-	vs_out.FragPosLightSpace = lightProjection * lightView * vec4(vs_out.FragPos, 1.0);
 	vec3 T = normalize(vec3(model * vec4(aTangent, 0.0)));
 	vec3 N = normalize(vec3(model * vec4(aNormal, 0.0)));
 	vec3 B = cross(N, T);
